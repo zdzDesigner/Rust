@@ -3,8 +3,10 @@
 // mod typebase;
 // mod ownership;
 mod enum_mod;
-mod struct_mod;
 mod module_mod;
+mod struct_mod;
+
+use module_mod::back_of_house;
 
 fn main() {
     // print::print();
@@ -30,8 +32,8 @@ fn main() {
 
     enum_mod::value_in_cents(enum_mod::Coin::Quarter(enum_mod::UsState::Alabama));
 
-
     enum_mod::equal();
 
     module_mod::eat_at_restaurant();
+    back_of_house::Breakfast::summer("xxx");
 }

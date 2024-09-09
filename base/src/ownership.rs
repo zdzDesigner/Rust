@@ -42,3 +42,9 @@ fn area3(rectangle: &mut Rectangle) -> u32 {
     println!("rect1 pointer:{:p}", rectangle); // 0x7ffce4e92470 同一指针
     rectangle.width * rectangle.height
 }
+
+
+
+
+
+
