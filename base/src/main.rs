@@ -13,10 +13,14 @@ mod std_mod {
     pub mod fs {
         pub mod open;
     }
+    pub mod net {
+        pub mod addr;
+    }
 }
 
 use module_mod::back_of_house;
 use std_mod::fs::open as fs;
+use std_mod::net::addr as net;
 
 fn main() {
     // print::print();
@@ -70,6 +74,8 @@ fn main() {
     // match fs::std_read_file(){
     //     Ok()
     // };
-    // 
-    
+    //
+
+
+    net::parse();
 }
