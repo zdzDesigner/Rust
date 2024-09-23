@@ -3,13 +3,14 @@
 // mod typebase;
 mod enum_mod;
 mod error_mod;
+mod expression;
 mod hashmap_mod;
 mod module_mod;
 mod ownership;
-mod slice_mod;
+// mod slice_mod;
 mod string_mod;
 mod struct_mod;
-// mod tuple;
+// mod tuple_mod;
 mod vec_mod;
 mod std_mod {
     pub mod fs {
@@ -32,6 +33,8 @@ fn main() {
     // ownership::t_move();
     // return;
 
+    expression::express();
+
     // struct_mod ====================================
     let rect = struct_mod::Rectangle {
         width: 20,
@@ -44,13 +47,13 @@ fn main() {
     println!("area:{}", struct_mod::Rectangle::square(10).area());
 
     // enum_mod ====================================
-
     println!("{:?}", enum_mod::Ip::V4);
     println!("{:?}", enum_mod::Ip::V6);
 
-    enum_mod::value_in_cents(enum_mod::Coin::Quarter(enum_mod::UsState::Alabama));
+    enum_mod::value_in_cents(enum_mod::Coin::Quarter(enum_mod::ZhState::Shanghai));
 
     enum_mod::equal();
+    // =============================================
 
     module_mod::eat_at_restaurant();
     back_of_house::Breakfast::summer("xxx");
@@ -82,7 +85,7 @@ fn main() {
 
     net::parse();
 
-    let fds:Vec<u32> = vec![2, 4, 1, 8];
-    slice_mod::Mqtt::new(fds.as_slice()).print();
+    // let fds:Vec<u32> = vec![2, 4, 1, 8];
+    // slice_mod::Mqtt::new(fds.as_slice()).print();
     // slice_mod::Mqtt::new(&fds[..]).print();
 }
