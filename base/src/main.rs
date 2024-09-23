@@ -1,13 +1,15 @@
 // mod print;
 // mod tuple;
 // mod typebase;
-// mod ownership;
 mod enum_mod;
 mod error_mod;
 mod hashmap_mod;
 mod module_mod;
+mod ownership;
+mod slice_mod;
 mod string_mod;
 mod struct_mod;
+// mod tuple;
 mod vec_mod;
 mod std_mod {
     pub mod fs {
@@ -27,6 +29,8 @@ fn main() {
     // tuple::logic();
     // typebase::logic();
     // ownership::ownership();
+    // ownership::t_move();
+    // return;
 
     // struct_mod ====================================
     let rect = struct_mod::Rectangle {
@@ -76,6 +80,9 @@ fn main() {
     // };
     //
 
-
     net::parse();
+
+    let fds:Vec<u32> = vec![2, 4, 1, 8];
+    slice_mod::Mqtt::new(fds.as_slice()).print();
+    // slice_mod::Mqtt::new(&fds[..]).print();
 }

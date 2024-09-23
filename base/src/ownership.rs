@@ -48,3 +48,9 @@ fn area3(rectangle: &mut Rectangle) -> u32 {
 
 
 
+pub fn t_move(){
+    let a = String::from("aaa");
+    let b = &a;
+    println!("a:{},b:{}",a,b);
+
+}

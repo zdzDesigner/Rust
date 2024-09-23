@@ -1,3 +1,5 @@
+#![allow(unused)]
+
 #[derive(Debug)]
 pub struct Rectangle {
     pub width: u32,
