@@ -7,6 +7,7 @@ mod expression;
 mod hashmap_mod;
 mod module_mod;
 mod ownership;
+mod pointer;
 // mod slice_mod;
 mod string_mod;
 mod struct_mod;
@@ -33,6 +34,7 @@ fn main() {
     // ownership::t_move();
     // return;
 
+    pointer::logic();
     expression::express();
 
     // struct_mod ====================================
