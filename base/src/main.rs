@@ -7,6 +7,7 @@ mod expression;
 mod hashmap_mod;
 mod module_mod;
 mod ownership;
+mod generics;
 mod pointer;
 // mod slice_mod;
 mod string_mod;
