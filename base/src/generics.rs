@@ -36,6 +36,7 @@ mod generics_one_t_test {
         println!("distance_from_origin:{}", p.distance_from_origin());
     }
 }
+
 // =====================================================
 
 struct PointMutil<T, U> {
