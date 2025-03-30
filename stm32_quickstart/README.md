@@ -1,138 +1,86 @@
-# `cortex-m-quickstart`
 
-> A template for building applications for ARM Cortex-M microcontrollers
 
-This project is developed and maintained by the [Cortex-M team][team].
 
-## Dependencies
+```sh
+cargo readobj --bin stm32_quickstart -- --file-headers
 
-To build embedded programs using this template you'll need:
+cargo size --bin stm32_quickstart --release -- -A
 
-- Rust 1.31, 1.30-beta, nightly-2018-09-13 or a newer toolchain. e.g. `rustup
-  default beta`
+cargo objdump --bin  stm32_quickstart --release -- --disassemble --no-show-raw-insn --print-imm-hex
 
-- The `cargo generate` subcommand. [Installation
-  instructions](https://github.com/ashleygwilliams/cargo-generate#installation).
 
-- `rust-std` components (pre-compiled `core` crate) for the ARM Cortex-M
-  targets. Run:
 
-``` console
-$ rustup target add thumbv6m-none-eabi thumbv7m-none-eabi thumbv7em-none-eabi thumbv7em-none-eabihf
 ```
 
-## Using this template
+> `qemu-system-arm` 模拟器
+1. 查看支持的板子
+```sh
+➜ qemu-system-arm -machine help
+Supported machines are:
+akita                Sharp SL-C1000 (Akita) PDA (PXA270) (deprecated)
+ast1030-evb          Aspeed AST1030 MiniBMC (Cortex-M4)
+ast2500-evb          Aspeed AST2500 EVB (ARM1176)
+ast2600-evb          Aspeed AST2600 EVB (Cortex-A7)
+b-l475e-iot01a       B-L475E-IOT01A Discovery Kit (Cortex-M4)
+bletchley-bmc        Facebook Bletchley BMC (Cortex-A7)
+borzoi               Sharp SL-C3100 (Borzoi) PDA (PXA270) (deprecated)
+bpim2u               Bananapi M2U (Cortex-A7)
+canon-a1100          Canon PowerShot A1100 IS (ARM946)
+cheetah              Palm Tungsten|E aka. Cheetah PDA (OMAP310) (deprecated)
+collie               Sharp SL-5500 (Collie) PDA (SA-1110)
+connex               Gumstix Connex (PXA255) (deprecated)
+cubieboard           cubietech cubieboard (Cortex-A8)
+emcraft-sf2          SmartFusion2 SOM kit from Emcraft (M2S010)
+fby35-bmc            Facebook fby35 BMC (Cortex-A7)
+fby35                Meta Platforms fby35
+fp5280g2-bmc         Inspur FP5280G2 BMC (ARM1176)
+fuji-bmc             Facebook Fuji BMC (Cortex-A7)
+g220a-bmc            Bytedance G220A BMC (ARM1176)
+highbank             Calxeda Highbank (ECX-1000)
+imx25-pdk            ARM i.MX25 PDK board (ARM926)
+integratorcp         ARM Integrator/CP (ARM926EJ-S)
+...
 
-**NOTE**: This is the very short version that only covers building programs. For
-the long version, which additionally covers flashing, running and debugging
-programs, check [the embedded Rust book][book].
 
-[book]: https://rust-embedded.github.io/book
+```
+2. 模拟器执行程序
+```sh
+➜ qemu-system-arm \
+  -cpu cortex-m3 \
+  -machine lm3s6965evb \
+  -nographic \
+  -semihosting-config enable=on,target=native \
+  -kernel target/thumbv7m-none-eabi/debug/examples/hello
+```
+- `qemu-system-arm`.这是QEMU模拟器.有几种不同的QEMU二进制文件;这个能对ARM机器进行完整的系统仿真
+- `-cpu cortex-m3`.这告诉QEMU去模拟一个Cortex-M3 CPU.指定CPU型号可以让我们捕获一些编译错误:
+  例如,运行为带有硬件FPU的Cortex-M4F编译的程序回事QEMU执行过程中出错.
+- `-machine lm3s6965evb`.这告诉QEMU去模拟LM3S6965EVB,一个包含LM3S6965的评估开发板
+- `-nographic`.这告诉QEMu不要去启动GUI.
+- `-semihosting-config (..)`.这让QEMU启动semihosting. Semihosting允许仿真设备使用主机的stdout, stderr和stdin,并且在主机上创建文件
+- `-kernel $file`.这告诉QEMU运行哪个二进制文件
 
-0. Before we begin you need to identify some characteristics of the target
-  device as these will be used to configure the project:
 
-- The ARM core. e.g. Cortex-M3.
 
-- Does the ARM core include an FPU? Cortex-M4**F** and Cortex-M7**F** cores do.
+3. 模拟器debug程序
+```sh
+➜ qemu-system-arm \
+  -cpu cortex-m3 \
+  -machine lm3s6965evb \
+  -nographic \
+  -semihosting-config enable=on,target=native \
+  -gdb tcp::3333 \
+  -S \
+  -kernel target/thumbv7m-none-eabi/debug/examples/hello
+```
+```sh
+➜ gdb-multiarch -q target/thumbv7m-none-eabi/debug/examples/hello
 
-- How much Flash memory and RAM does the target device has? e.g. 256 KiB of
-  Flash and 32 KiB of RAM.
-
-- Where are Flash memory and RAM mapped in the address space? e.g. RAM is
-  commonly located at address `0x2000_0000`.
-
-You can find this information in the data sheet or the reference manual of your
-device.
-
-In this example we'll be using the STM32F3DISCOVERY. This board contains an
-STM32F303VCT6 microcontroller. This microcontroller has:
-
-- A Cortex-M4F core that includes a single precision FPU
-
-- 256 KiB of Flash located at address 0x0800_0000.
-
-- 40 KiB of RAM located at address 0x2000_0000. (There's another RAM region but
-  for simplicity we'll ignore it).
-
-1. Instantiate the template.
-
-``` console
-$ cargo generate --git https://github.com/rust-embedded/cortex-m-quickstart
- Project Name: app
- Creating project called `app`...
- Done! New project created /tmp/app
-
-$ cd app
+target remote :3333
 ```
 
-2. Set a default compilation target. There are four options as mentioned at the
-   bottom of `.cargo/config`. For the STM32F303VCT6, which has a Cortex-M4F
-   core, we'll pick the `thumbv7em-none-eabihf` target.
 
-``` console
-$ tail -n9 .cargo/config.toml
-```
 
-``` toml
-[build]
-# Pick ONE of these compilation targets
-# target = "thumbv6m-none-eabi"    # Cortex-M0 and Cortex-M0+
-# target = "thumbv7m-none-eabi"    # Cortex-M3
-# target = "thumbv7em-none-eabi"   # Cortex-M4 and Cortex-M7 (no FPU)
-target = "thumbv7em-none-eabihf" # Cortex-M4F and Cortex-M7F (with FPU)
-# target = "thumbv8m.base-none-eabi"   # Cortex-M23
-# target = "thumbv8m.main-none-eabi"   # Cortex-M33 (no FPU)
-# target = "thumbv8m.main-none-eabihf" # Cortex-M33 (with FPU)
-```
 
-3. Enter the memory region information into the `memory.x` file.
 
-``` console
-$ cat memory.x
-/* Linker script for the STM32F303VCT6 */
-MEMORY
-{
-  /* NOTE 1 K = 1 KiBi = 1024 bytes */
-  FLASH : ORIGIN = 0x08000000, LENGTH = 256K
-  RAM : ORIGIN = 0x20000000, LENGTH = 40K
-}
-```
 
-4. Build the template application or one of the examples.
-
-``` console
-$ cargo build
-```
-
-## VS Code
-
-This template includes launch configurations for debugging CortexM programs with Visual Studio Code located in the `.vscode/` directory.  
-See [.vscode/README.md](./.vscode/README.md) for more information.  
-If you're not using VS Code, you can safely delete the directory from the generated project.
-
-# License
-
-This template is licensed under either of
-
-- Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or
-  http://www.apache.org/licenses/LICENSE-2.0)
-
-- MIT license ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
-
-at your option.
-
-## Contribution
-
-Unless you explicitly state otherwise, any contribution intentionally submitted
-for inclusion in the work by you, as defined in the Apache-2.0 license, shall be
-dual licensed as above, without any additional terms or conditions.
-
-## Code of Conduct
-
-Contribution to this crate is organized under the terms of the [Rust Code of
-Conduct][CoC], the maintainer of this crate, the [Cortex-M team][team], promises
-to intervene to uphold that code of conduct.
-
-[CoC]: https://www.rust-lang.org/policies/code-of-conduct
-[team]: https://github.com/rust-embedded/wg#the-cortex-m-team

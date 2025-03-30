@@ -55,4 +55,46 @@ pub fn str_split() {
     let text = "hello world wonderful world";
     println!("{:?}", text.split_whitespace());
     println!("{:?}", text.split(' '));
+    println!("expect:{}", text.split(' ').next().expect("--")); // 如何为None 默认取"--"
+    println!("unwrap:{}", text.split(' ').next().unwrap());
+}
+
+fn first_word(s: &String) -> &str {
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().enumerate() {
+        // 空格
+        if item == b' ' {
+            return &s[0..i];
+        }
+    }
+
+    &s[..]
+}
+
+// 返回String
+pub fn ret_string() -> String {
+    return format!("{}", "zdz");
+}
+pub fn ret_str(string: &str) -> &str {
+    return string;
+}
+pub fn ret_static_str() -> &'static str {
+    return "zdz";
+}
+
+#[cfg(test)]
+mod test_string {
+    use super::*;
+
+    #[test]
+    fn test_ret_string() {
+        let string = ret_string();
+        println!("string:{}", string);
+
+        println!("str:{}", ret_str(&String::from("zdz")[0..]));
+        println!("static_str:{}", ret_static_str());
+
+        println!("first_word:{}", first_word(&String::from("hello world")));
+    }
 }
