@@ -1,3 +1,6 @@
+#![allow(dead_code)]
+#![allow(unused_variables)]	
+
 // mod print;
 // mod tuple;
 // mod typebase;
@@ -14,7 +17,7 @@ mod pointer;
 // mod slice_mod;
 mod string_mod;
 mod struct_mod;
-// mod tuple_mod;
+mod tuple_mod;
 mod vec_mod;
 mod std_mod {
     pub mod fs {

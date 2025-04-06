@@ -1,4 +1,4 @@
-#![allow(unused)]
+// #![allow(unused)]
 
 use std::fmt;
 
@@ -38,4 +38,37 @@ fn diff() {
 
     println!("{:#?}", Canvas2D(19, "xx"));
     println!("{}", Canvas2D(19, "xx"));
+}
+
+#[cfg(test)]
+mod test_tuple {
+
+    #[test]
+    fn tup_dot() {
+        let v = (2, 1, 'a');
+        println!("{}", v.1);
+        let (x, y, z) = v;
+        println!("{},{},{}", x, y, z);
+    }
+}
+
+#[cfg(test)]
+mod test_array {
+    #[test]
+    fn array() {
+        let array: [u32; 4] = [2, 3, 4, 18];
+        println!("{:?}", array);
+        println!("{}", array.len());
+        let [first, ..] = array;
+        println!("{}", first);
+        let [.., last] = array;
+        println!("{}", last);
+    }
+
+    #[test]
+    fn array_sample() {
+        let array = [3; 4];
+        println!("{:?}", array);
+        assert_eq!(4, array.len());
+    }
 }

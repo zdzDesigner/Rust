@@ -12,7 +12,7 @@ pub fn str_method() {
 
     println!("s:{}", s); // sss
     println!("s:{:?}", s); // "sss"
-    println!("s:{:?}", s.as_bytes());
+    println!("s:{:?}", s.as_bytes()); // s:[120, 115, 115, 115]
 
     println!("&s[0..]:{}", &s[0..3]);
 }
@@ -88,6 +88,11 @@ mod test_string {
     use super::*;
 
     #[test]
+    fn base() {
+        str_method();
+    }
+
+    #[test]
     fn test_ret_string() {
         let string = ret_string();
         println!("string:{}", string);
@@ -96,5 +101,21 @@ mod test_string {
         println!("static_str:{}", ret_static_str());
 
         println!("first_word:{}", first_word(&String::from("hello world")));
+    }
+
+    #[test]
+    fn parse() {
+        let age = String::from("38 ");
+        if let Ok(val) = age.parse::<usize>() {
+            // 类型注释
+            println!("{}", val);
+        } else {
+            println!("error!!!!");
+        };
+        println!("age.trim():{}", age.trim());
+        println!("{:?}", age.trim().parse::<usize>()); // OK(38)
+        println!("{:?}", age.trim().parse::<usize>().unwrap()); // 38
+        println!("{:?}", age.trim().parse::<usize>().ok()); // Some(38)
+        println!("{:?}", age.trim().parse::<usize>().ok().unwrap()); // 38
     }
 }
