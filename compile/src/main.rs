@@ -16,5 +16,6 @@ fn main() {
     let x = 5;
     let y = 10;
     let z = if x > y { x + y } else { x * y };
-    println!("Result: {}", z);
+    _ = z;
+    // println!("Result: {}", z);
 }

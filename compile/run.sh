@@ -8,6 +8,4 @@
 
 
 rustc --emit=mir -C opt-level=1 ./src/main.rs
-#
-#
-strip --strip-debug ./main.mir
+
