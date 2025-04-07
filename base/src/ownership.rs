@@ -62,6 +62,13 @@ mod ownership_move_test {
     struct V {
         name: String,
     }
+
+    impl Drop for V {
+        // 自定义drop (不会覆盖默认drop), 只是查看调用过程
+        fn drop(&mut self) {
+            println!("drop ==========");
+        }
+    }
     fn ref_handler(v: &V) {
         // 指针引用
         println!("{:?}", v);
@@ -126,6 +133,12 @@ mod ownership_move_test {
             Some(val) => val,
             None => "NotFound",
         };
-        println!("{}", ret);
+        {
+            let v = V {
+                name: String::from("aa"),
+            };
+            println!("block drop pre =====");
+        }
+        println!("== drop pre==== {} =======", ret);
     }
 }
