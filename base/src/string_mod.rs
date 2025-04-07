@@ -15,6 +15,7 @@ pub fn str_method() {
     println!("s:{:?}", s.as_bytes()); // s:[120, 115, 115, 115]
 
     println!("&s[0..]:{}", &s[0..3]);
+    // s.as_bytes().iter().next()
 }
 
 pub fn str_add() {

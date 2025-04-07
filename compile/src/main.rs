@@ -12,10 +12,14 @@
 //     // print!("b:{}", b);
 // }
 
+mod stack;
+mod generics;
+
 fn main() {
-    let x = 5;
-    let y = 10;
-    let z = if x > y { x + y } else { x * y };
-    _ = z;
-    // println!("Result: {}", z);
+    stack::basetype();
+
+    generics::pure(3);
+    generics::pure('a');
+    generics::pure("aaa");
+
 }

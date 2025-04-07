@@ -41,7 +41,10 @@ fn struct_test() {
 
     println!("version:{}", ipv4.version());
 
-    let tcp = Tcp{ip:ipv4, port:"3333"};
+    let tcp = Tcp {
+        ip: ipv4,
+        port: "3333",
+    };
     println!("tcp:{:?}", tcp);
 }
 
@@ -51,7 +54,6 @@ struct Tcp<'a> {
     port: &'a str,
 }
 
-
 #[cfg(test)]
 mod lifetime_test {
     use super::*;
@@ -60,5 +62,30 @@ mod lifetime_test {
     fn lifetime_base() {
         base();
         struct_test();
+    }
+
+    fn max<T: PartialOrd + Copy>(list: &[T]) -> T {
+        let mut max_item = list[0];
+        for &item in list.iter() {
+            if item > max_item {
+                max_item = item;
+            }
+        }
+        return max_item;
+    }
+
+    #[test]
+    fn max_test() {
+        let v = max(&vec![4, 1, 9]);
+        println!("max:{}", v);
+    }
+
+    fn add<T: std::ops::Add<Output = T>>(a: T, b: T) -> T {
+        return a + b;
+    }
+    #[test]
+    fn add_test() {
+        let v = add(4, 2);
+        println!("add:{}", v);
     }
 }
