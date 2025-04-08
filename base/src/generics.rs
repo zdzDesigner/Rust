@@ -70,3 +70,65 @@ mod generics_mutil_t_test {
         println!("p3.x = {}, p3.y = {}", p3.x, p3.y);
     }
 }
+
+#[cfg(test)]
+mod trait_test {
+    use trait_lib::{notify, NewsArticle, Summary};
+
+    trait Namer {
+        fn name(&self) -> String;
+        fn about(&self) -> String {
+            // return format!("{} about", String::clone(&self.name()));
+            return format!("default {} about", self.name());
+        }
+    }
+
+    fn getname<T: Namer>(t: &T) {
+        println!("trait getname:{}", t.name());
+    }
+    fn getname2(t: impl Namer) {
+        println!("trait getname:{}", t.name());
+    }
+
+    #[derive(Clone)]
+    struct Name {
+        pub val: String,
+    }
+    impl Name {
+        fn about(&self) -> String {
+            return format!("Name {} about", self.name());
+        }
+    }
+    impl Namer for Name {
+        fn name(&self) -> String {
+            // return String::from(&self.val);
+            return format!("{}", self.val);
+        }
+        fn about(&self) -> String {
+            return format!("Namer {} about", self.name());
+        }
+    }
+
+    #[test]
+    fn test_trait() {
+        let name = Name {
+            val: String::from("zdz"),
+        };
+        getname(&name);
+        // getname2(name);
+        // Name::about > Namer::about > default Namer::about
+        println!("{}", name.about());
+    }
+
+    #[test]
+    fn test_lib_trait() {
+        let na = NewsArticle {
+            headline: String::from("H1"),
+            location: String::from("location"),
+            author: String::from("zdz"),
+            content: String::from("xxxx"),
+        };
+        println!("{}", na.summarize());
+        notify(na);
+    }
+}

@@ -5,8 +5,10 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [workspace]
+members = ["src/trait_lib"]
 
 [dependencies]
+trait_lib = {path = "src/trait_lib"}
 
 
 [profile.release]

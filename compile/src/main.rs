@@ -14,12 +14,14 @@
 
 mod stack;
 mod generics;
+mod mutil_mut;
 
 fn main() {
-    stack::basetype();
+    // stack::basetype();
+    //
+    // generics::pure(3);
+    // generics::pure('a');
+    // generics::pure("aaa");
 
-    generics::pure(3);
-    generics::pure('a');
-    generics::pure("aaa");
-
+    mutil_mut::err_mut();
 }

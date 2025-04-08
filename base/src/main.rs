@@ -4,6 +4,7 @@
 // mod print;
 // mod tuple;
 // mod typebase;
+mod symbol;
 mod enum_mod;
 mod error_mod;
 mod expression;
