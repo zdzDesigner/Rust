@@ -25,3 +25,20 @@ impl Rectangle {
         self.width * self.height
     }
 }
+
+#[cfg(test)]
+mod test_struct_fmt {
+    use super::*;
+
+    #[test]
+    fn test_println() {
+        let rect = Rectangle {
+            width: 20,
+            height: 30,
+        };
+
+        println!("{:?}", rect);
+        println!("{:#?}", rect); // 换行
+        println!("dbg!:{:#?}", dbg!(rect)); // 换行
+    }
+}
