@@ -3,7 +3,7 @@
 
 // mod print;
 // mod tuple;
-// mod typebase;
+mod type_base;
 mod symbol;
 mod enum_mod;
 mod error_mod;

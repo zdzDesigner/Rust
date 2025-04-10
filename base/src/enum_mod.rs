@@ -85,3 +85,34 @@ mod tests {
         msg.call();
     }
 }
+
+#[cfg(test)]
+mod test_enum_option {
+
+    fn getname(isok: bool) -> Option<String> {
+        // return None;
+        // return Some(String::from("zdz"));
+        if isok {
+            return Some(String::from("zdz"));
+        } else {
+            return None;
+        }
+    }
+
+    #[test]
+    fn test_option() {
+        if let Some(name) = getname(true) {
+            println!("name:{:?}", name);
+        }
+        if let None = getname(false) {
+            println!("isnone");
+        }
+
+        let name = getname(true);
+
+        println!("{}", name.unwrap());
+        // println!("{}", getname(false).unwrap()); // unwrap_failed() panic
+
+        println!("{:?}", getname(false).unwrap_or("lmy".to_string()));
+    }
+}
