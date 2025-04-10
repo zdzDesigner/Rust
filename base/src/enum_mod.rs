@@ -80,6 +80,11 @@ mod tests {
     use super::*;
 
     #[test]
+    fn test_enum() {
+        println!("Message::Quit = {:?}", Message::Quit);
+    }
+
+    #[test]
     fn test_write_message() {
         let msg = Message::Write(String::from("hello"));
         msg.call();

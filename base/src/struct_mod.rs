@@ -25,3 +25,17 @@ impl Rectangle {
         self.width * self.height
     }
 }
+
+#[cfg(test)]
+mod test_struct_tuple {
+
+    #[derive(Debug)]
+    struct Message(String, i32);
+
+    #[test]
+    fn test_struct_tuple() {
+        let message = Message(String::from("warning"), 888);
+        println!("{:?}", message.0);
+        println!("{:?}", message.1);
+    }
+}
