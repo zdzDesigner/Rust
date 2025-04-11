@@ -73,12 +73,48 @@ fn err_mut() -> () {
     }
 }
 
+fn digestion(_1: String) -> () {
+    debug name => _1;
+    let mut _0: ();
+    scope 1 {
+    }
+
+    bb0: {
+        drop(_1) -> [return: bb1, unwind continue];
+    }
+
+    bb1: {
+        return;
+    }
+}
+
+fn test_move() -> () {
+    let mut _0: ();
+    let _1: std::string::String;
+    let _2: ();
+    scope 1 {
+        debug name => _1;
+    }
+
+    bb0: {
+        _1 = <String as From<&str>>::from(const "zdz") -> [return: bb1, unwind continue];
+    }
+
+    bb1: {
+        _2 = digestion(move _1) -> [return: bb2, unwind continue];
+    }
+
+    bb2: {
+        return;
+    }
+}
+
 fn main() -> () {
     let mut _0: ();
     let _1: ();
 
     bb0: {
-        _1 = err_mut() -> [return: bb1, unwind continue];
+        _1 = test_move() -> [return: bb1, unwind continue];
     }
 
     bb1: {

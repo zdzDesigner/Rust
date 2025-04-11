@@ -42,13 +42,15 @@ mod ownership_test {
             "The area of the rectangle is {} square pixels.",
             area3(&mut rect1)
         );
+        eprintln!("&mut rect1:{:?}", rect1);
         println!(
             "The area of the rectangle is {} square pixels.",
             area2(&rect1)
         );
+        eprintln!("&rect1:{:?}", rect1);
         println!(
             "The area of the rectangle is {} square pixels.",
-            area(rect1) // move了
+            area(rect1) // 丢失所有权(move了), 后续无法访问
         );
         // println!("rect1:{:?}", rect1); 非词法作用域
     }

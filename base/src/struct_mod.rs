@@ -39,3 +39,30 @@ mod test_struct_tuple {
         println!("{:?}", message.1);
     }
 }
+#[cfg(test)]
+mod test_struct_fmt {
+    use super::*;
+
+    #[test]
+    fn test_println() {
+        let rect = Rectangle {
+            width: 20,
+            height: 30,
+        };
+
+        println!("{:?}", rect);
+        println!("{:#?}", rect); // 换行
+        println!("dbg!:{:#?}", dbg!(rect)); // 换行
+    }
+}
+
+#[cfg(test)]
+mod test_tuple {
+
+    #[test]
+    fn test_tuple() {
+        let tp = ();
+        // println!("tp:{:?}, tp.length{}", tp, tp.count());
+        // std::any::type_name::<tp>()
+    }
+}
