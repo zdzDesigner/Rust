@@ -4,4 +4,5 @@ fn digestion(name: String) {
 pub fn test_move() {
     let name = String::from("zdz");
     digestion(name);
+    _ = name;
 }

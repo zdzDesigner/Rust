@@ -1,22 +1,29 @@
-pub fn base() {
-    let name_wrap = String::from("zdz too long");
-    let res = longest(&name_wrap, "aa");
-    println!("lifetime:{}", res);
+#[cfg(test)]
+mod test_sample {
+    fn base() {
+        let name_wrap = String::from("zdz too long");
+        let res = longest(&name_wrap, "aa");
+        println!("lifetime:{}", res);
 
-    // 声明周期问题
-    // let res;
-    // {
-    //     let name_inner = String::from("designer");
-    //     res = longest(&name_wrap.as_str(), &name_inner);
-    // }
-    // println!("lifetime:{}", res);
-}
+        // // 声明周期问题
+        // let res;
+        // {
+        //     let name_inner = String::from("designer");
+        //     res = longest(&name_wrap.as_str(), &name_inner);
+        // }
+        // println!("lifetime:{}", res);
+    }
 
-fn longest<'a>(wrap: &'a str, inner: &'a str) -> &'a str {
-    if wrap.len() > inner.len() {
-        wrap
-    } else {
-        inner
+    fn longest<'a>(wrap: &'a str, inner: &'a str) -> &'a str {
+        if wrap.len() > inner.len() {
+            wrap
+        } else {
+            inner
+        }
+    }
+    #[test]
+    fn lifetime_base() {
+        base();
     }
 }
 
@@ -56,13 +63,6 @@ struct Tcp<'a> {
 
 #[cfg(test)]
 mod lifetime_test {
-    use super::*;
-
-    #[test]
-    fn lifetime_base() {
-        base();
-        struct_test();
-    }
 
     fn max<T: PartialOrd + Copy>(list: &[T]) -> T {
         let mut max_item = list[0];

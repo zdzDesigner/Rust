@@ -94,6 +94,8 @@ fn test_move() -> () {
     let _2: ();
     scope 1 {
         debug name => _1;
+        scope 2 {
+        }
     }
 
     bb0: {

@@ -14,9 +14,10 @@ mod test_type_base {
         // for v in color { // not an iterator
         //     println!("{}", v);
         // }
-        for v in Some(color) {
-            println!("v:{:?}", v);
-        }
+
+        // for v in Some(color) {
+        //     println!("v:{:?}", v); // v:(255, 44, 88, 0.1)
+        // }
     }
 
     #[test]
