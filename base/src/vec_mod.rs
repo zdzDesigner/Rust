@@ -29,17 +29,6 @@ pub fn vec_logic() {
     println!("v2:{:?}", v2);
 }
 
-pub fn t_borrow() {
-    let mut v = vec![1, 2, 3, 4, 5];
-
-    let first = &v[0];
-
-    v.push(6); // 重新分配内存, first 已被释放
-
-    // println!("The first element is: {:?}", first);
-    // Error
-}
-
 pub fn for_vec() {
     let mut v = vec![1, 3, 4, 5];
     println!("v:{:?}", v);
@@ -61,14 +50,44 @@ pub fn for_vec() {
     }
 }
 
-#[derive(Debug)]
-enum SqlOption {
-    Int(i32),
-    Text(String),
-}
+#[cfg(test)]
+mod test_vec {
 
-pub fn difftype_vec() {
-    let row = vec![SqlOption::Int(22), SqlOption::Text(String::from("xxxxx"))];
+    #[test]
+    fn test_vec_get() {
+        let mut xpoints: Vec<i32> = Vec::new();
+        println!("xpoints:{:?}", xpoints);
+        println!("xpoints length:{:?}", xpoints.len());
 
-    println!("row:{:?}", row);
+        xpoints.push(3);
+        println!("xpoints:{:?}", xpoints);
+        println!("xpoints length:{:?}", xpoints.len());
+    }
+
+    #[test]
+    fn test_borrow() {
+        let mut v = vec![1, 2, 3, 4, 5];
+        let first = &v[0];
+        v.push(6); // 重新分配内存, first 已被释放
+
+        // println!("The first element is: {:?}", first);
+        // Error
+
+        // let first = &v[0]; // 可以使用let重新赋值, 后续继续访问
+        // println!("The first element is: {:?}", first);
+    }
+
+    #[derive(Debug)]
+    enum SqlOption {
+        Int(i32),
+        Text(String),
+    }
+
+    #[test]
+    fn difftype_vec() {
+        let row = vec![SqlOption::Int(22), SqlOption::Text(String::from("blob"))];
+
+        println!("row:{:?}", row); // row:[Int(22), Text("xxxxx")]
+        println!("row length:{}", row.len()) // 2
+    }
 }

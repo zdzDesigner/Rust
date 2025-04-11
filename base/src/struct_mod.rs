@@ -1,9 +1,16 @@
 #![allow(unused)]
+use std::fmt::{Display, Formatter};
 
 #[derive(Debug)]
 pub struct Rectangle {
     pub width: u32,
     pub height: u32,
+}
+
+impl Display for Rectangle {
+    fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+        return f.write_fmt(format_args!("xxx"));
+    }
 }
 
 impl Rectangle {
@@ -39,7 +46,7 @@ mod test_struct_fmt {
 
         println!("{:?}", rect);
         println!("{:#?}", rect); // 换行
-        println!("dbg!:{:#?}", dbg!(rect)); // 换行
+        println!("dbg!:{:#?}", dbg!(rect)); // 打印详情
     }
 }
 

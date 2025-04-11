@@ -69,7 +69,6 @@ fn main() {
 
     vec_mod::vec_logic();
     vec_mod::for_vec();
-    vec_mod::difftype_vec();
 
     string_mod::str_const_to_string();
     string_mod::str_method();
