@@ -3,7 +3,7 @@
 #![allow(non_snake_case)]
 
 mod enum_mod;
-mod error_mod;
+mod enum_result;
 mod expression;
 mod generics;
 mod hashmap_mod;

@@ -124,8 +124,10 @@ mod test_enum_option {
 
 #[cfg(test)]
 mod test_enum_result {
-    fn isOK() -> Result<(), std::io::Error> {
-        return Ok(());
+    struct Error {}
+    fn isOK() -> Result<(), Error> {
+        // return Ok(());
+        return Err(Error {});
     }
     #[test]
     fn test_result() {
