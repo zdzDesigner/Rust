@@ -25,6 +25,46 @@ mod test_sample {
     fn lifetime_base() {
         base();
     }
+
+    #[test]
+    #[should_panic]
+    fn shoud_pinic() {
+        panic!("panic!!")
+    }
+}
+
+#[cfg(test)]
+mod sest_lifetime_generics {
+
+    trait Enver<'a> {
+        fn isDev(&self) -> bool;
+        fn message(&self) -> &'a str;
+    }
+
+    #[derive(Debug)]
+    struct Build<'a> {
+        env: bool,
+        vender: &'a str,
+    }
+    impl<'a> Enver<'a> for Build<'a> {
+        fn isDev(&self) -> bool {
+            println!("{:?}", self.message());
+            return self.env;
+        }
+        fn message(&self) -> &'a str {
+            return self.vender;
+        }
+    }
+
+    #[test]
+    fn test_env() {
+        let build = Build {
+            env: true,
+            vender: "Inforbit",
+        };
+        println!("{:#?}", build);
+        println!("isdev:{}", build.isDev());
+    }
 }
 
 #[derive(Debug)]
@@ -38,27 +78,31 @@ impl<'a> IPV4<'a> {
     }
 }
 
-fn struct_test() {
-    let ips = String::from("127.0.0.1/127.0.0.2/127.0.0.3/127.0.0.4");
-    let res = ips.split("/").next().expect("sss");
-    println!("res:{}", res);
-    let ipv4 = IPV4 { ip: res };
-    println!("ipv4.ip:{}", ipv4.ip);
-    println!("ipv4:{:?}", ipv4);
-
-    println!("version:{}", ipv4.version());
-
-    let tcp = Tcp {
-        ip: ipv4,
-        port: "3333",
-    };
-    println!("tcp:{:?}", tcp);
-}
-
 #[derive(Debug)]
 struct Tcp<'a> {
-    ip: IPV4<'a>,
+    ip: &'a IPV4<'a>,
     port: &'a str,
+}
+
+#[cfg(test)]
+mod test_struct_lifetime {
+    use super::*;
+
+    #[test]
+    fn test_nest_struct() {
+        let ipv4 = IPV4 { ip: "127.0.0.1" };
+        println!("ipv4.ip:{}", ipv4.ip);
+        println!("ipv4:{:?}", ipv4);
+
+        println!("version:{}", ipv4.version());
+
+        let tcp = Tcp {
+            ip: &ipv4,
+            port: "3333",
+        };
+        println!("tcp:{:#?}", tcp);
+        println!("ip: {}", tcp.ip.ip);
+    }
 }
 
 #[cfg(test)]

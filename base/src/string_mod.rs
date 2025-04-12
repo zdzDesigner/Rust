@@ -119,5 +119,24 @@ mod test_string {
         println!("{:?}", age.trim().parse::<usize>().ok()); // Some(38)
         println!("{:?}", age.trim().parse::<usize>().ok().unwrap()); // 38
     }
-}
 
+    #[test]
+    fn split() {
+        let ips = String::from("127.0.0.1/127.0.0.2/127.0.0.3/127.0.0.4");
+        let res = ips.split("/").next().unwrap();
+        println!("res:{:?}", res);
+        let mut iter = ips.split("/").into_iter();
+        let res = iter.next();
+        println!("res:{:?}", res);
+        let res = iter.next();
+        println!("res:{:?}", res);
+        let res = iter.next();
+        println!("res:{:?}", res);
+        let res = iter.next();
+        println!("res:{:?}", res);
+        let res = iter.next().unwrap_or("默认值");
+        println!("res:{:?}", res);
+        let res = iter.next().expect("panic了, 这条信息会打印");
+        println!("res:{:?}", res);
+    }
+}

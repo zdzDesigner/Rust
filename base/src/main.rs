@@ -1,20 +1,21 @@
 #![allow(dead_code)]
-#![allow(unused_variables)]	
+#![allow(unused_variables)]
+#![allow(non_snake_case)]
 
-// mod print;
-// mod tuple;
-mod type_base;
-mod symbol;
 mod enum_mod;
 mod error_mod;
 mod expression;
-mod hashmap_mod;
-mod module_mod;
-mod trait_mod;
-mod ownership;
 mod generics;
+mod hashmap_mod;
 mod lifetime;
+mod module_mod;
+mod ownership;
 mod pointer;
+mod symbol;
+mod trait_mod;
+// mod print;
+// mod tuple;
+mod type_base;
 // mod slice_mod;
 mod string_mod;
 mod struct_mod;
@@ -96,4 +97,13 @@ fn main() {
     // let fds:Vec<u32> = vec![2, 4, 1, 8];
     // slice_mod::Mqtt::new(fds.as_slice()).print();
     // slice_mod::Mqtt::new(&fds[..]).print();
+}
+
+#[cfg(test)]
+mod test_main {
+    #[test]
+    #[should_panic]
+    fn should_panic() {
+        panic!("you can should_panic catch error of testing");
+    }
 }

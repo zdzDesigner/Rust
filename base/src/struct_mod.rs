@@ -68,7 +68,5 @@ mod test_tuple {
     #[test]
     fn test_tuple() {
         let tp = ();
-        // println!("tp:{:?}, tp.length{}", tp, tp.count());
-        // std::any::type_name::<tp>()
     }
 }

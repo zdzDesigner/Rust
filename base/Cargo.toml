@@ -13,3 +13,7 @@ trait_lib = {path = "src/trait_lib"}
 
 [profile.release]
 panic = 'abort'
+
+[build]
+rustflags = ["-A", "non_camel_case_types"]
+

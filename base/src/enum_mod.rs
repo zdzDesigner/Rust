@@ -121,3 +121,14 @@ mod test_enum_option {
         println!("{:?}", getname(false).unwrap_or("lmy".to_string()));
     }
 }
+
+#[cfg(test)]
+mod test_enum_result {
+    fn isOK() -> Result<(), std::io::Error> {
+        return Ok(());
+    }
+    #[test]
+    fn test_result() {
+        println!("result:{}", isOK().is_err());
+    }
+}
