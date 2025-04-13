@@ -22,4 +22,25 @@ mod test_enum_result {
             println!("unwrap or else:{:?}", err);
         })
     }
+
+    fn result_unit_type() -> Result<(), String> {
+        return Err(String::from("this is error test!"));
+    }
+    fn result(isok: bool) -> Result<String, String> {
+        if isok {
+            Ok("result ok".to_string())
+        } else {
+            Err("result error".to_string())
+        }
+    }
+
+    #[test]
+    fn test_let_result() -> () {
+        if let Ok(v) = result(true) {
+            println!("{:?}", v);
+        }
+
+        let Ok(v) = result(true) else { return };
+        println!("{:?}", v);
+    }
 }

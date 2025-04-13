@@ -10,13 +10,13 @@ fn main() {
 
     let conf = Config::new(&args);
     if let Err(errmsg) = conf {
-        println!("{:?}", errmsg);
+        eprintln!("{:?}", errmsg);
         process::exit(1);
     }
     println!("{:#?}", conf);
 
     if let Err(errmsg) = grep::run(&conf.unwrap()) {
-        println!("{:?}", errmsg);
+        eprintln!("{:?}", errmsg);
         process::exit(1);
     }
 

@@ -22,6 +22,7 @@ impl Config {
         //     query_text: &args[2],
         // };
 
+        if let Some(filename) = args.get(1) {}
         let Some(filename) = args.get(1) else {
             return Err("must has filename");
         };

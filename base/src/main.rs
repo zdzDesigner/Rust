@@ -28,6 +28,9 @@ mod std_mod {
     pub mod net {
         pub mod addr;
     }
+    mod env {
+        mod env_mod;
+    }
 }
 
 use module_mod::back_of_house;
