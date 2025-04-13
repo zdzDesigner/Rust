@@ -21,21 +21,11 @@ mod string_mod;
 mod struct_mod;
 mod tuple_mod;
 mod vec_mod;
-mod std_mod {
-    pub mod fs {
-        pub mod open;
-    }
-    pub mod net {
-        pub mod addr;
-    }
-    mod env {
-        mod env_mod;
-    }
-}
+mod std_mod;
 
 use module_mod::back_of_house;
-use std_mod::fs::open as fs;
-use std_mod::net::addr as net;
+// use crate::std_mod::fs::open as fs;
+// use std_mod::net::addr as net;
 
 fn main() {
     // print::print();
@@ -85,17 +75,17 @@ fn main() {
 
     // error_mod::err_panic();
 
-    // std_mod::fs::open::open();
-    fs::open();
-    // fs::fast_open();
-    let _ = fs::open_res();
-    let _ = fs::open_res_chain();
-    // match fs::std_read_file(){
-    //     Ok()
-    // };
+    // // std_mod::fs::open::open();
+    // fs::open();
+    // // fs::fast_open();
+    // let _ = fs::open_res();
+    // let _ = fs::open_res_chain();
+    // // match fs::std_read_file(){
+    // //     Ok()
+    // // };
+    // //
     //
-
-    net::parse();
+    // net::parse();
 
     // let fds:Vec<u32> = vec![2, 4, 1, 8];
     // slice_mod::Mqtt::new(fds.as_slice()).print();
