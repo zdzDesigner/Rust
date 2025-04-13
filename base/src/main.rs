@@ -13,6 +13,7 @@ mod ownership;
 mod pointer;
 mod symbol;
 mod trait_mod;
+mod closure;
 // mod print;
 // mod tuple;
 mod type_base;
