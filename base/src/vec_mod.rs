@@ -62,6 +62,9 @@ mod test_vec {
         xpoints.push(3);
         println!("xpoints:{:?}", xpoints);
         println!("xpoints length:{:?}", xpoints.len());
+
+        println!("vec get:{:?}", xpoints.get(0));
+        println!("vec get:{:?}", xpoints.get(1));
     }
 
     #[test]

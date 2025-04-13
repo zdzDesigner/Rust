@@ -15,4 +15,11 @@ mod test_enum_result {
     fn test_result() -> Result<(), String> {
         return Err(String::from("this is error test!"));
     }
+
+    #[test]
+    fn unwrap_or_else() {
+        Err(String::from("this is error test!")).unwrap_or_else(|err| {
+            println!("unwrap or else:{:?}", err);
+        })
+    }
 }
