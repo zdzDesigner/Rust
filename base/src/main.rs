@@ -23,6 +23,7 @@ mod struct_mod;
 mod tuple_mod;
 mod vec_mod;
 mod std_mod;
+mod iter;
 
 use module_mod::back_of_house;
 // use crate::std_mod::fs::open as fs;
