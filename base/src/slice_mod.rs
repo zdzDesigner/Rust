@@ -4,7 +4,9 @@ pub struct Mqtt {
 
 impl Mqtt {
     pub fn new(list: &[u32]) -> Mqtt {
-        Mqtt { fd_list: list.clone() }
+        Mqtt {
+            fd_list: list.clone(),
+        }
     }
 
     pub fn print(&self) {
@@ -13,3 +15,7 @@ impl Mqtt {
         }
     }
 }
+
+
+#[cfg(test)]
+mod test_slice {}

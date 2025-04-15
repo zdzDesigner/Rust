@@ -17,7 +17,7 @@ mod closure;
 // mod print;
 // mod tuple;
 mod type_base;
-// mod slice_mod;
+mod slice_mod;
 mod string_mod;
 mod struct_mod;
 mod tuple_mod;
