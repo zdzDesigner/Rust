@@ -7,8 +7,8 @@ use std::{env, error::Error};
 
 #[derive(Debug)]
 pub struct Config {
-    pub filename: String,
-    pub query_text: String,
+    filename: String,
+    query_text: String,
 }
 // pub struct Config<'a> {
 //     pub filename: &'a str,
@@ -16,13 +16,14 @@ pub struct Config {
 // }
 
 impl Config {
-    pub fn new(args: &[String]) -> Result<Config, &str> {
+    // pub fn new(args: &[String]) -> Result<Config, &'static str> {
+    pub fn new(args: &[String]) -> Result<Config, &str> { // 'static 可以省略
         // let conf = Config {
         //     filename: &args[1],
         //     query_text: &args[2],
         // };
 
-        if let Some(filename) = args.get(1) {}
+        // if let Some(filename) = args.get(1) {}
         let Some(filename) = args.get(1) else {
             return Err("must has filename");
         };

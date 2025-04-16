@@ -12,10 +12,12 @@
 //     // print!("b:{}", b);
 // }
 
-mod stack;
 mod generics;
-mod mutil_mut;
+mod lifetime;
 mod move_demo;
+mod mutil_mut;
+mod stack;
+mod closure;
 
 fn main() {
     // stack::basetype();
@@ -25,5 +27,7 @@ fn main() {
     // generics::pure("aaa");
 
     // mutil_mut::err_mut();
-    move_demo::test_move();
+    // move_demo::test_move();
+    // lifetime::longest("aaa", "bbb");
+    closure::test_closure_scope();
 }

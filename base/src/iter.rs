@@ -1,5 +1,8 @@
 #[cfg(test)]
 mod test_iter {
+    // Iterator
+    // FromIterator
+    // IntoIterator
 
     #[test]
     fn gen_iter() {
@@ -20,5 +23,10 @@ mod test_iter {
         let mut iter = items.iter();
         println!("{:?}", iter.next());
         println!("{:?}", iter.next());
+    }
+
+    #[test]
+    fn collect() {
+        
     }
 }
