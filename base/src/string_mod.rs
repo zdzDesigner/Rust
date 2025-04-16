@@ -147,14 +147,21 @@ mod test_string_base {
     #[test]
     fn test_base() {
         let name = "zdz";
-
         let name_obj = name.to_string();
         println!("name: {:?}", name);
         println!("name_obj: {:?}", name_obj);
         let vecname = name_obj.into_bytes();
-        println!("name: {:?}", name);
+        // println!("name_obj: {:?}", name_obj); // =========== 转移了
+
         println!("into_bytes:{:?}", vecname);
         // println!("into_bytes:{:?}", String::from_iter(vecname.iter()));
         println!("{:?}", String::from_utf8(vecname));
+    }
+
+    #[test]
+    fn into_moved() {
+        let name_obj = String::from("zdz");
+        let name_vec = name_obj.into_bytes();
+        // println!("moved: {:?}", name_obj); // =========== 转移了
     }
 }
