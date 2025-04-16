@@ -94,3 +94,14 @@ mod test_vec {
         println!("row length:{}", row.len()) // 2
     }
 }
+
+#[cfg(test)]
+mod test_vec_api {
+    #[test]
+    fn test_vec() {
+        let list = vec![23, 32, 2];
+        let map = list.iter().map(|v| v + 1);
+        println!("{:?}", map);
+        map.map(|v| v + 1).into_iter().collect();
+    }
+}
