@@ -43,3 +43,6 @@ mod test_trait {
         println!("notify_t:{}", notify_t(house));
     }
 }
+
+
+

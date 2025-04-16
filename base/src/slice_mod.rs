@@ -1,11 +1,11 @@
 pub struct Mqtt {
-    fd_list: &[u32],
+    fd_list: Vec<u32>,
 }
 
 impl Mqtt {
     pub fn new(list: &[u32]) -> Mqtt {
         Mqtt {
-            fd_list: list.clone(),
+            fd_list: list.to_vec(),
         }
     }
 
@@ -15,7 +15,6 @@ impl Mqtt {
         }
     }
 }
-
 
 #[cfg(test)]
 mod test_slice {}

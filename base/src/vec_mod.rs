@@ -78,6 +78,9 @@ mod test_vec {
 
         // let first = &v[0]; // 可以使用let重新赋值, 后续继续访问
         // println!("The first element is: {:?}", first);
+        // let v: Vec<i32> = v.iter().map(|v| v + 3).collect();
+        // collect 实现FromIterator trait 的类型
+        v.iter().map(|v| v + 3).collect::<Vec<i32>>();
     }
 
     #[derive(Debug)]
