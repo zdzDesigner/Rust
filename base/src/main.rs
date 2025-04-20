@@ -15,6 +15,7 @@ mod symbol;
 mod trait_mod;
 mod closure;
 mod associated;
+mod box_mod;
 // mod print;
 // mod tuple;
 mod type_base;
