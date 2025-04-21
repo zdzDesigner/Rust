@@ -26,3 +26,35 @@ mod test_cons_list {
         println!("{:?}", link);
     }
 }
+
+#[cfg(test)]
+mod test_custom_box {
+    use std::ops::Deref;
+
+    #[derive(Debug)]
+    struct Box<T>(T);
+
+    impl<T> Box<T> {
+        fn new(t: T) -> Box<T> {
+            Box(t)
+        }
+        // fn into(self) -> T { // move
+        //     self.0
+        // }
+    }
+    impl<T> Deref for Box<T> {
+        type Target = T;
+        fn deref(&self) -> &Self::Target {
+            &self.0
+        }
+    }
+
+    #[test]
+    fn base() {
+        let b = Box::new(3);
+        println!("{:?}", b);
+        println!("{}", b.deref());
+        println!("{}", *b.deref());
+        // println!("{}", b.into()); // move
+    }
+}
