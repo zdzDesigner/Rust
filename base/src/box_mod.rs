@@ -55,6 +55,39 @@ mod test_custom_box {
         println!("{:?}", b);
         println!("{}", b.deref());
         println!("{}", *b.deref());
-        // println!("{}", b.into()); // move
+        assert_eq!(3, *b); // Deref
+                           // println!("{}", b.into()); // move
+    }
+    
+    // 隐士解引用
+    fn force_conv(name: &str) {
+        println!("name:{}", name);
+    }
+    #[test]
+    fn test_force_conv() {
+        force_conv(&Box::new(String::from("zdz")));
+        force_conv(&String::from("zdz"));
+    }
+}
+
+#[cfg(test)]
+mod test_deref {
+    use std::ops::Deref;
+
+    struct Box<T> {
+        item: T,
+    }
+
+    impl<T> Deref for Box<T> {
+        type Target = T;
+        fn deref(&self) -> &Self::Target {
+            &self.item
+        }
+    }
+
+    #[test]
+    fn base() {
+        let v = Box { item: 3 };
+        assert_eq!(3, *v);
     }
 }
