@@ -16,6 +16,7 @@ mod trait_mod;
 mod closure;
 mod associated;
 mod http_server;
+mod box_mod;
 // mod print;
 // mod tuple;
 mod type_base;

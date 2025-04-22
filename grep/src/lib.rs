@@ -2,6 +2,7 @@
 #![allow(dead_code)]
 #![allow(unused)]
 
+use std::env::args;
 use std::fs;
 use std::{env, error::Error};
 
@@ -17,7 +18,8 @@ pub struct Config {
 
 impl Config {
     // pub fn new(args: &[String]) -> Result<Config, &'static str> {
-    pub fn new(args: &[String]) -> Result<Config, &str> { // 'static 可以省略
+    pub fn new(args: &[String]) -> Result<Config, &str> {
+        // 'static 可以省略
         // let conf = Config {
         //     filename: &args[1],
         //     query_text: &args[2],
@@ -49,18 +51,30 @@ impl Config {
 pub fn getArgs() {
     let mut args_iter = env::args();
     args_iter.next();
-    let filename = args_iter.next();
-    if filename == None {
+    let Some(filename) = args_iter.next() else {
         panic!("must has filename");
-    }
-    let query_text = args_iter.next();
-    if query_text == None {
+    };
+    let Some(query_text) = args_iter.next() else {
         panic!("must has query text");
-    }
+    };
     println!("filename:{:?}, query_text:{:?}", filename, query_text);
 }
 
-fn getArgsOfVec() {}
+fn getArgsOfMatch() -> Result<String, &'static str> {
+    let mut args_iter = env::args();
+    args_iter.next();
+    let filename = match args_iter.next() {
+        Some(filename) => filename,
+        None => return Err("xxx"),
+    };
+
+    let query_text = match args_iter.next() {
+        Some(v) => v,
+        None => return Err("xxx"),
+    };
+
+    Ok(String::from("ok"))
+}
 
 pub fn run(conf: &Config) -> Result<(), &str> {
     let content = fs::read_to_string(&conf.filename);
@@ -77,4 +91,11 @@ pub fn run(conf: &Config) -> Result<(), &str> {
     }
 
     Ok(())
+}
+
+fn search<'a>(query: &str, content: &'a str) -> Vec<&'a str> {
+    content
+        .lines()
+        .filter(|line| line.contains(query))
+        .collect()
 }

@@ -17,6 +17,9 @@ impl Summary for House {
             self.rooms, self.descr
         )
     }
+    fn def(&self) -> u8 {
+        8
+    }
 }
 
 fn notify(summary: impl Summary) -> String {
@@ -42,7 +45,15 @@ mod test_trait {
         // println!("notify:{}", notify(house));
         println!("notify_t:{}", notify_t(house));
     }
+
+    #[test]
+    fn call_trait_fn() {
+        let house = House {
+            rooms: 10,
+            descr: String::from("vvv"),
+        };
+
+        println!("{}", house.def());
+        println!("force call trait fn:{}", <House as Summary>::def(&house));
+    }
 }
-
-
-

@@ -11,6 +11,9 @@ members = ["src/trait_lib"]
 trait_lib = {path = "src/trait_lib"}
 
 
+[profile.dev]
+# opt-level = 3
+
 [profile.release]
 panic = 'abort'
 
