@@ -17,6 +17,7 @@ mod closure;
 mod associated;
 mod http_server;
 mod box_mod;
+mod rc_mod;
 // mod print;
 // mod tuple;
 mod type_base;
