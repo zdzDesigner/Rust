@@ -36,3 +36,9 @@ pub fn notify(t: impl Summary) {
     println!("{}", t.summarize());
 }
 // ANCHOR_END: here
+
+pub mod supper_demo;
+pub mod share_demo;
+pub mod inner_trait_demo;
+pub mod logger;
+pub mod duplicate;

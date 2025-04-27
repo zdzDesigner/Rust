@@ -56,4 +56,22 @@ mod test_trait {
         println!("{}", house.def());
         println!("force call trait fn:{}", <House as Summary>::def(&house));
     }
+
+    use trait_lib::duplicate::{run_addto, run_debug_show, run_dupli, run_min};
+    use trait_lib::inner_trait_demo::player;
+    use trait_lib::logger::run_log;
+    use trait_lib::share_demo::shape;
+    use trait_lib::supper_demo::supper_lib::create;
+
+    #[test]
+    fn test_trait_lib() {
+        create();
+        shape();
+        player();
+        run_log();
+        run_dupli();
+        run_addto();
+        run_debug_show();
+        run_min();
+    }
 }
