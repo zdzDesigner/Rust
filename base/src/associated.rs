@@ -79,5 +79,8 @@ mod test_std_trait {
             .filter(|x| x % 3 == 0)
             .sum();
         println!("sum:{}", sum);
+
+
+        // Box
     }
 }
