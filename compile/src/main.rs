@@ -12,12 +12,13 @@
 //     // print!("b:{}", b);
 // }
 
+mod closure;
 mod generics;
 mod lifetime;
+mod macro_demo;
 mod move_demo;
 mod mutil_mut;
 mod stack;
-mod closure;
 
 fn main() {
     // stack::basetype();
@@ -29,5 +30,7 @@ fn main() {
     // mutil_mut::err_mut();
     // move_demo::test_move();
     // lifetime::longest("aaa", "bbb");
-    closure::test_closure_scope();
+    // closure::test_closure_scope();
+
+    macro_demo::test_vvv();
 }

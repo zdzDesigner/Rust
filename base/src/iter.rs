@@ -13,10 +13,12 @@ mod test_iter {
         }
 
         let items = vec!["aaa", "bbb", "cc", "ddd"];
-        for v in &items { // 这里要借用
+        for v in &items {
+            // 这里要借用
             println!("{:?}", v);
         }
-        for v in items.iter() { // 这里 iter(&self) 签名中已借用
+        for v in items.iter() {
+            // 这里 iter(&self) 签名中已借用
             println!("{:?}", v);
         }
 
@@ -26,7 +28,5 @@ mod test_iter {
     }
 
     #[test]
-    fn collect() {
-        
-    }
+    fn collect() {}
 }

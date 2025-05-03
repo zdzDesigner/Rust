@@ -26,7 +26,6 @@ mod test_cons_list {
         println!("{:?}", link);
     }
 
-
     // use std::rc::Rc;
 
     #[test]

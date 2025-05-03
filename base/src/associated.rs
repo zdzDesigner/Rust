@@ -80,7 +80,6 @@ mod test_std_trait {
             .sum();
         println!("sum:{}", sum);
 
-
         // Box
     }
 }

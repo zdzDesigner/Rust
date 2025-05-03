@@ -1,4 +1,2 @@
-
 #[cfg(test)]
-mod test_socket {
-}
+mod test_socket {}

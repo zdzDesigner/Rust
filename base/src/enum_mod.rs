@@ -125,7 +125,7 @@ mod test_enum_option {
 #[cfg(test)]
 mod test_enum_result {
     use std::error;
-    
+
     fn isDynOK() -> Result<(), Box<dyn error::Error>> {
         return Ok(());
         // return Err("xxxxx"); // ??如何构造 error::Error

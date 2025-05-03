@@ -106,6 +106,5 @@ mod test_vec_api {
         let map = list.iter().map(|v| v + 1);
         println!("{:?}", map);
         map.map(|v| v + 1).into_iter().collect::<Vec<i32>>();
-
     }
 }

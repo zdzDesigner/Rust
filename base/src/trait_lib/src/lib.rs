@@ -37,8 +37,8 @@ pub fn notify(t: impl Summary) {
 }
 // ANCHOR_END: here
 
-pub mod supper_demo;
-pub mod share_demo;
+pub mod duplicate;
 pub mod inner_trait_demo;
 pub mod logger;
-pub mod duplicate;
+pub mod share_demo;
+pub mod supper_demo;

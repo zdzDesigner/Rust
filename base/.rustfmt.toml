@@ -1,0 +1,3 @@
+# .rustfmt.toml
+macro_mangling = "Ok"  # 允许格式化宏生成的代码（默认可能跳过）
+reorder_impl_items = true

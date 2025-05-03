@@ -2,38 +2,41 @@
 #![allow(unused_variables)]
 #![allow(non_snake_case)]
 
+mod associated;
+mod box_mod;
+mod closure;
 mod enum_mod;
 mod enum_result;
 mod expression;
 mod generics;
 mod hashmap_mod;
+mod http_server;
 mod lifetime;
 mod module_mod;
 mod ownership;
 mod pointer;
+mod rc_mod;
 mod symbol;
 mod trait_mod;
-mod closure;
-mod associated;
-mod http_server;
-mod box_mod;
-mod rc_mod;
 // mod print;
 // mod tuple;
-mod type_base;
+mod iter;
 mod slice_mod;
+mod std_mod;
+mod macro_mod;
 mod string_mod;
 mod struct_mod;
 mod tuple_mod;
+mod type_base;
 mod vec_mod;
-mod std_mod;
-mod iter;
+mod cfg_mod;
 
 use module_mod::back_of_house;
 // use crate::std_mod::fs::open as fs;
 // use std_mod::net::addr as net;
 
 fn main() {
+    cfg_mod::cfg_xxx();
     // print::print();
     // tuple::logic();
     // typebase::logic();

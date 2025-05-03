@@ -1,5 +1,54 @@
 // WARNING: This output format is intended for human consumers only
 // and is subject to change without notice. Knock yourself out.
+fn test_closure_scope() -> () {
+    let mut _0: ();
+    let _1: &str;
+    let mut _3: &&str;
+    let _4: &str;
+    let mut _5: &{closure@./src/closure.rs:3:31: 3:33};
+    scope 1 {
+        debug name => _1;
+        let _2: {closure@./src/closure.rs:3:31: 3:33};
+        scope 2 {
+            debug canuse_clouse_scope => _2;
+        }
+    }
+
+    bb0: {
+        StorageLive(_1);
+        _1 = const "zdz";
+        StorageLive(_2);
+        StorageLive(_3);
+        _3 = &_1;
+        _2 = {closure@./src/closure.rs:3:31: 3:33} { name: move _3 };
+        StorageDead(_3);
+        StorageLive(_4);
+        StorageLive(_5);
+        _5 = &_2;
+        _4 = <{closure@./src/closure.rs:3:31: 3:33} as Fn<()>>::call(move _5, const ()) -> [return: bb1, unwind continue];
+    }
+
+    bb1: {
+        StorageDead(_5);
+        StorageDead(_4);
+        StorageDead(_2);
+        StorageDead(_1);
+        return;
+    }
+}
+
+fn test_closure_scope::{closure#0}(_1: &{closure@./src/closure.rs:3:31: 3:33}) -> &str {
+    debug name => (*((*_1).0: &&str));
+    let mut _0: &str;
+    let mut _2: &&str;
+
+    bb0: {
+        _2 = copy ((*_1).0: &&str);
+        _0 = copy (*_2);
+        return;
+    }
+}
+
 fn pure(_1: T) -> T {
     debug a => _1;
     let mut _0: T;
@@ -50,6 +99,161 @@ fn longest(_1: &str, _2: &str) -> &str {
 
     bb5: {
         StorageDead(_3);
+        return;
+    }
+}
+
+fn test_vvv() -> () {
+    let mut _0: ();
+    let _1: std::vec::Vec<i32>;
+    let mut _2: std::vec::Vec<i32>;
+    let _3: ();
+    let mut _4: &mut std::vec::Vec<i32>;
+    let _5: ();
+    let mut _6: &mut std::vec::Vec<i32>;
+    let _7: ();
+    let mut _8: &mut std::vec::Vec<i32>;
+    let _9: ();
+    let mut _10: std::fmt::Arguments<'_>;
+    let _11: &[core::fmt::rt::Argument<'_>; 1];
+    let _12: [core::fmt::rt::Argument<'_>; 1];
+    let mut _13: core::fmt::rt::Argument<'_>;
+    let _14: &std::vec::Vec<i32>;
+    let _15: ();
+    let mut _16: std::fmt::Arguments<'_>;
+    let _17: &[core::fmt::rt::Argument<'_>; 1];
+    let _18: [core::fmt::rt::Argument<'_>; 1];
+    let mut _19: core::fmt::rt::Argument<'_>;
+    let _20: &usize;
+    let _21: usize;
+    let mut _22: &std::vec::Vec<i32>;
+    scope 1 {
+        debug v => _1;
+    }
+    scope 2 {
+        debug temp_vec => _2;
+    }
+
+    bb0: {
+        StorageLive(_1);
+        StorageLive(_2);
+        _2 = Vec::<i32>::new() -> [return: bb1, unwind continue];
+    }
+
+    bb1: {
+        StorageLive(_4);
+        _4 = &mut _2;
+        _3 = Vec::<i32>::push(move _4, const 4_i32) -> [return: bb2, unwind: bb14];
+    }
+
+    bb2: {
+        StorageDead(_4);
+        StorageLive(_6);
+        _6 = &mut _2;
+        _5 = Vec::<i32>::push(move _6, const 2_i32) -> [return: bb3, unwind: bb14];
+    }
+
+    bb3: {
+        StorageDead(_6);
+        StorageLive(_8);
+        _8 = &mut _2;
+        _7 = Vec::<i32>::push(move _8, const 1_i32) -> [return: bb4, unwind: bb14];
+    }
+
+    bb4: {
+        StorageDead(_8);
+        _1 = move _2;
+        StorageDead(_2);
+        StorageLive(_10);
+        StorageLive(_12);
+        StorageLive(_13);
+        _14 = &_1;
+        _13 = core::fmt::rt::Argument::<'_>::new_debug::<Vec<i32>>(move _14) -> [return: bb5, unwind: bb13];
+    }
+
+    bb5: {
+        _12 = [move _13];
+        StorageDead(_13);
+        _11 = &_12;
+        _10 = Arguments::<'_>::new_v1::<2, 1>(const macro_demo::test_vvv::promoted[1], move _11) -> [return: bb6, unwind: bb13];
+    }
+
+    bb6: {
+        _9 = _print(move _10) -> [return: bb7, unwind: bb13];
+    }
+
+    bb7: {
+        StorageDead(_10);
+        StorageDead(_12);
+        StorageLive(_16);
+        StorageLive(_18);
+        StorageLive(_19);
+        StorageLive(_21);
+        StorageLive(_22);
+        _22 = &_1;
+        _21 = Vec::<i32>::len(move _22) -> [return: bb8, unwind: bb13];
+    }
+
+    bb8: {
+        StorageDead(_22);
+        _20 = &_21;
+        _19 = core::fmt::rt::Argument::<'_>::new_debug::<usize>(move _20) -> [return: bb9, unwind: bb13];
+    }
+
+    bb9: {
+        _18 = [move _19];
+        StorageDead(_19);
+        _17 = &_18;
+        _16 = Arguments::<'_>::new_v1::<2, 1>(const macro_demo::test_vvv::promoted[0], move _17) -> [return: bb10, unwind: bb13];
+    }
+
+    bb10: {
+        _15 = _print(move _16) -> [return: bb11, unwind: bb13];
+    }
+
+    bb11: {
+        StorageDead(_16);
+        StorageDead(_21);
+        StorageDead(_18);
+        drop(_1) -> [return: bb12, unwind continue];
+    }
+
+    bb12: {
+        StorageDead(_1);
+        return;
+    }
+
+    bb13 (cleanup): {
+        drop(_1) -> [return: bb15, unwind terminate(cleanup)];
+    }
+
+    bb14 (cleanup): {
+        drop(_2) -> [return: bb15, unwind terminate(cleanup)];
+    }
+
+    bb15 (cleanup): {
+        resume;
+    }
+}
+
+const test_vvv::promoted[0]: &[&str; 2] = {
+    let mut _0: &[&str; 2];
+    let mut _1: [&str; 2];
+
+    bb0: {
+        _1 = [const "", const "\n"];
+        _0 = &_1;
+        return;
+    }
+}
+
+const test_vvv::promoted[1]: &[&str; 2] = {
+    let mut _0: &[&str; 2];
+    let mut _1: [&str; 2];
+
+    bb0: {
+        _1 = [const "", const "\n"];
+        _0 = &_1;
         return;
     }
 }
@@ -155,61 +359,12 @@ fn basetype() -> () {
     }
 }
 
-fn test_closure_scope() -> () {
-    let mut _0: ();
-    let _1: &str;
-    let mut _3: &&str;
-    let _4: &str;
-    let mut _5: &{closure@./src/closure.rs:3:31: 3:33};
-    scope 1 {
-        debug name => _1;
-        let _2: {closure@./src/closure.rs:3:31: 3:33};
-        scope 2 {
-            debug canuse_clouse_scope => _2;
-        }
-    }
-
-    bb0: {
-        StorageLive(_1);
-        _1 = const "zdz";
-        StorageLive(_2);
-        StorageLive(_3);
-        _3 = &_1;
-        _2 = {closure@./src/closure.rs:3:31: 3:33} { name: move _3 };
-        StorageDead(_3);
-        StorageLive(_4);
-        StorageLive(_5);
-        _5 = &_2;
-        _4 = <{closure@./src/closure.rs:3:31: 3:33} as Fn<()>>::call(move _5, const ()) -> [return: bb1, unwind continue];
-    }
-
-    bb1: {
-        StorageDead(_5);
-        StorageDead(_4);
-        StorageDead(_2);
-        StorageDead(_1);
-        return;
-    }
-}
-
-fn test_closure_scope::{closure#0}(_1: &{closure@./src/closure.rs:3:31: 3:33}) -> &str {
-    debug name => (*((*_1).0: &&str));
-    let mut _0: &str;
-    let mut _2: &&str;
-
-    bb0: {
-        _2 = copy ((*_1).0: &&str);
-        _0 = copy (*_2);
-        return;
-    }
-}
-
 fn main() -> () {
     let mut _0: ();
     let _1: ();
 
     bb0: {
-        _1 = test_closure_scope() -> [return: bb1, unwind continue];
+        _1 = test_vvv() -> [return: bb1, unwind continue];
     }
 
     bb1: {
