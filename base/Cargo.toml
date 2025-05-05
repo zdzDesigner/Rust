@@ -5,7 +5,7 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [workspace]
-members = ["src/trait_lib"]
+members = [ "src/macro_lib","src/trait_lib"]
 
 [dependencies]
 proc-macro2 = "1.0.95"
@@ -25,6 +25,4 @@ panic = 'abort'
 default = ["xxx"] # 默认开启"xxx"
 xxx = [] #  仅仅声明xxx特性，无依赖
 
-[build]
-rustflags = ["-A", "non_camel_case_types"]
 
