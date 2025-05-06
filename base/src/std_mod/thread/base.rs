@@ -16,3 +16,6 @@ mod test_thread {
         std::thread::sleep(Duration::from_secs(100));
     }
 }
+
+// cargo t test_thread --  --nocapture --show-output
+

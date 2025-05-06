@@ -14,7 +14,7 @@ pub fn main() -> Result<(), String> {
         .build()
         .map_err(|e| e.to_string())?;
 
-    window.set_opacity(230.0)?;
+    window.set_opacity(0.3)?;
     // if let Err(err) = window.set_opacity(230.0) {
     //     panic!("error:{:?}", err);
     // }
@@ -40,8 +40,9 @@ pub fn main() -> Result<(), String> {
         }
 
         // canvas.set_draw_color(Color::RGB(55, 233, 88));
-        canvas.set_draw_color(Color::RGBA(255, 233, 0, 233));
+        // canvas.set_draw_color(Color::RGBA(255, 233, 0, 0));
 
+        println!("aa");
         canvas.clear();
         canvas.present();
         std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 30));
@@ -50,4 +51,3 @@ pub fn main() -> Result<(), String> {
 
     Ok(())
 }
-
