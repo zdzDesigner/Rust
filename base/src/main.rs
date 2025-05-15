@@ -24,6 +24,7 @@ mod trait_mod;
 mod iter;
 mod slice_mod;
 mod std_mod;
+mod core;
 mod macro_mod;
 mod string_mod;
 mod struct_mod;

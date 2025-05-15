@@ -82,6 +82,7 @@ mod tests {
     #[test]
     fn test_enum() {
         println!("Message::Quit = {:?}", Message::Quit);
+        println!("Message::Quit = {:?}", Message::Quit);
     }
 
     #[test]
