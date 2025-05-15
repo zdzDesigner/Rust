@@ -2,6 +2,7 @@
 #![allow(unused_variables)]
 #![allow(non_snake_case)]
 
+mod module;
 mod associated;
 mod box_mod;
 mod closure;
