@@ -35,7 +35,7 @@ pub extern "C" fn zip_code_database_free(ptr: *mut ZipCodeDatabase) {
         return;
     }
     unsafe {
-        Box::from_raw(ptr);
+        let _ = Box::from_raw(ptr);
     }
 }
 

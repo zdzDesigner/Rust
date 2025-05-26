@@ -1,5 +1,15 @@
 ## rust compile cdylib
 
+
+- `crate-type`: 生成库类型
+```toml
+[lib]
+crate-type = ["cdylib","staticlib"] # 生成两种类型(动态库、静态库)
+```
+
+
+
+
 ```sh
 # 配置link_path, 遵循`lib`规则, 优先链接`动态库`(编译完成，无法运行, 动态库非标准路径, 必须在运行时指定库路径)
 gcc -o dytest ./test/dy1.c -L ./target/debug -lrust_dylib
