@@ -19,7 +19,9 @@ pub fn main() -> Result<(), String> {
     //     panic!("error:{:?}", err);
     // }
 
-    let mut canvas = window.into_canvas().build().map_err(|e| e.to_string())?;
+    // let mut canvas = window.into_canvas().build().map_err(|e| e.to_string())?;
+    let mut canvas = window.into_canvas().build().unwrap();
+    // let mut canvas = window.into_canvas().build()?;
 
     canvas.set_draw_color(Color::RGBA(255, 233, 0, 33));
     canvas.clear();
@@ -42,7 +44,7 @@ pub fn main() -> Result<(), String> {
         // canvas.set_draw_color(Color::RGB(55, 233, 88));
         // canvas.set_draw_color(Color::RGBA(255, 233, 0, 0));
 
-        println!("aa");
+        // println!("aa");
         canvas.clear();
         canvas.present();
         std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 30));

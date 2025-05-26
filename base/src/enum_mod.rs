@@ -121,6 +121,13 @@ mod test_enum_option {
 
         println!("{:?}", getname(false).unwrap_or("lmy".to_string()));
     }
+    #[test]
+    fn match_option() {
+        match getname(true) {
+            Some(val) => println!("{val}"),
+            None => println!("xxxx"),
+        }
+    }
 }
 
 #[cfg(test)]
