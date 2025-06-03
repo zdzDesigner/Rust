@@ -108,3 +108,14 @@ mod test_vec_api {
         map.map(|v| v + 1).into_iter().collect::<Vec<i32>>();
     }
 }
+
+mod test_array {
+    #[test]
+    fn test_array() {
+        let ys: [i32; 500] = [0; 500];
+        println!("array:{}", ys.len());
+
+        println!("len:{}", ys[0..10].len());
+        println!("len:{}", &ys[0..10].len());
+    }
+}

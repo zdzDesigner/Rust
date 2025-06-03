@@ -90,3 +90,13 @@ mod test_iter_peekable {
         println!("expr:{:?}", expr);
     }
 }
+
+#[cfg(test)]
+mod test_iter_sum {
+    #[test]
+    fn iter_sum() {
+        let arr = [3, 8, 19, 3];
+        let val = arr.iter().sum::<u32>();
+        println!("val: {val}");
+    }
+}
