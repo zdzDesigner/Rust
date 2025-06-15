@@ -17,6 +17,7 @@ impl Summary for House {
             self.rooms, self.descr
         )
     }
+
     fn def(&self) -> u8 {
         8
     }
@@ -73,5 +74,11 @@ mod test_trait {
         run_addto();
         run_debug_show();
         run_min();
+        trait_lib::notify2(&trait_lib::Tweet {
+            username: String::from("xxxxxx"),
+            content: String::from("content"),
+            reply: false,
+            retweet: false,
+        });
     }
 }

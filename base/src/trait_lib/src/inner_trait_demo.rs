@@ -9,4 +9,5 @@ pub fn player() {
     println!("player:{:?}", player);
     player.name = String::from("xxx");
     println!("player:{:?}", player);
+    player.progress = 3;
 }

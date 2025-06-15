@@ -35,6 +35,20 @@ impl Summary for Tweet {
 pub fn notify(t: impl Summary) {
     println!("{}", t.summarize());
 }
+pub fn notify2<T>(item: &T)
+where
+    T: Summary,
+{
+    println!("Breaking news! {}", item.summarize());
+}
+
+#[cfg(test)]
+mod notify_trait {
+    #[test]
+    fn trait_where() {
+        println!("trait where!");
+    }
+}
 // ANCHOR_END: here
 
 pub mod duplicate;
