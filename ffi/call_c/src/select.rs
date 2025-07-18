@@ -1,7 +1,8 @@
-use libc::{c_int, fd_set, select, timeval, FD_ISSET, FD_SET, FD_ZERO};
+use libc::{FD_ISSET, FD_SET, FD_ZERO, c_int, fd_set, select, timeval};
 use std::net::TcpListener;
 
 fn main() -> std::io::Result<()> {
+    println!("select ...");
     let listener = TcpListener::bind("127.0.0.1:8080")?;
     listener.set_nonblocking(true)?;
     let listener_fd = listener.as_raw_fd();

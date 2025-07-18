@@ -1,7 +1,10 @@
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
-use sdl2::pixels::Color;
+use sdl2::pixels::{Color, PixelFormatEnum};
+use sdl2::render::Texture;
+use sdl2::surface::Surface;
 use std::time::Duration;
+
 
 pub fn main() -> Result<(), String> {
     let sdl_context = sdl2::init()?;
@@ -14,7 +17,7 @@ pub fn main() -> Result<(), String> {
         .build()
         .map_err(|e| e.to_string())?;
 
-    window.set_opacity(0.3)?;
+    window.set_opacity(0.8)?;
     // if let Err(err) = window.set_opacity(230.0) {
     //     panic!("error:{:?}", err);
     // }
@@ -24,14 +27,21 @@ pub fn main() -> Result<(), String> {
     // let mut canvas = window.into_canvas().build()?;
 
     canvas.set_draw_color(Color::RGBA(255, 233, 0, 33));
+    let texture_creator = canvas.texture_creator();
+    let surface = Surface::new(512, 512, PixelFormatEnum::RGB24).unwrap();
+    let texture = Texture::from_surface(&surface, &texture_creator).unwrap();
+
     canvas.clear();
     canvas.present();
+    // println!("{:?}", canvas);
     let mut event_pump = sdl_context.event_pump()?;
 
     'running: loop {
         for event in event_pump.poll_iter() {
             match event {
-                Event::TextInput { text, .. } => println!("{}", text),
+                Event::TextInput { text, .. } => {
+                    println!("xxx:{}", text);
+                }
                 Event::Quit { .. }
                 | Event::KeyDown {
                     keycode: Some(Keycode::Escape),
