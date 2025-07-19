@@ -3,8 +3,12 @@ use serde::Deserialize;
 use std::collections::HashMap;
 use std::io::{self, Write};
 
-trait Event {}
 type Handler = fn(&str);
+pub trait Event {
+    fn on(&mut self, evtname: String, handle: Handler);
+    fn emit(&self, evtname: String, data: &str);
+}
+
 #[derive(Clone)]
 pub struct Router {
     routes: HashMap<String, Handler>,
@@ -15,11 +19,13 @@ impl Router {
             routes: HashMap::new(),
         }
     }
-    pub fn on(&mut self, evtname: String, handle: Handler) {
+}
+impl Event for Router {
+    fn on(&mut self, evtname: String, handle: Handler) {
         self.routes.insert(evtname, handle);
     }
     // pub fn emit(&self, evtname: String) -> Option<Handler> {}
-    pub fn emit(&self, evtname: String, data: &str) {
+    fn emit(&self, evtname: String, data: &str) {
         // eprintln!("evtname:{:?}", evtname);
         if let Some(handle) = self.routes.get(&evtname).copied() {
             handle(data);

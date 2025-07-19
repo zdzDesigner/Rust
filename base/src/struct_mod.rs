@@ -28,6 +28,7 @@ impl Rectangle {
     pub fn area(&self) -> u32 {
         self.width * self.height
     }
+
     pub fn area1(self: &Self) -> u32 {
         self.width * self.height
     }
@@ -68,5 +69,15 @@ mod test_tuple {
     #[test]
     fn test_tuple() {
         let tp = ();
+    }
+}
+
+mod test_unit_struct {
+    #[derive(Debug)]
+    struct UnitStruct;
+
+    #[test]
+    fn unit_struct() {
+        println!("{UnitStruct:?}");
     }
 }

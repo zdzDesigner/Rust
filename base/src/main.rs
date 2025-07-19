@@ -19,6 +19,7 @@ mod pointer;
 mod rc_mod;
 mod symbol;
 mod trait_mod;
+mod mut_mod;
 // mod print;
 // mod tuple;
 mod iter;

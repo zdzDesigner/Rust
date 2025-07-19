@@ -26,3 +26,18 @@ pub fn map_new() {
         println!("key:{},val:{}", key, val);
     }
 }
+
+#[cfg(test)]
+mod test_hashmap_zip {
+    use std::collections::HashMap;
+
+    #[test]
+    fn haspmap_zip() {
+        let ks = [2, 83, 1, 9];
+        let vs = ["aa", "dd", "cc", "bb"];
+
+        let map: HashMap<&u32, &str> = ks.iter().zip(vs).collect();
+        println!("map:{map:?}");
+        // let vs2 = vs.iter().map(|v| v.to_string());
+    }
+}

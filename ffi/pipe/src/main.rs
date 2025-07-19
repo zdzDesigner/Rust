@@ -1,5 +1,6 @@
 mod pipe;
 use pipe::Router;
+use pipe::Event;
 fn main() {
 
     let mut router = Router::new();

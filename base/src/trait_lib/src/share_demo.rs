@@ -5,7 +5,7 @@ struct Line(u32);
 struct Box(u32, u32);
 impl Box {
     fn area(&self) -> u32 {
-        self.0 * self.0
+        self.0 * self.1
     }
 }
 
