@@ -32,13 +32,15 @@ mod tuple_mod;
 mod type_base;
 mod vec_mod;
 mod cfg_mod;
+mod match_mod;
+mod deconstruction;
 
 use module_mod::back_of_house;
 // use crate::std_mod::fs::open as fs;
 // use std_mod::net::addr as net;
 
 fn main() {
-    cfg_mod::cfg_xxx();
+    cfg_mod::cfg_xxx(); // 测试 Cargo.toml features
     // print::print();
     // tuple::logic();
     // typebase::logic();

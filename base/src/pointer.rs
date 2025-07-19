@@ -6,13 +6,19 @@ pub fn logic() {
 
     unsafe {
         *p = 10; // 使用原始指针修改值
-        println!("Value of y: {}", *p); // 输出 10
+        println!("unsafe change Value of y: {}", *p); // 输出 10
     }
+
+    y = 11;
+    println!("direct change value {y}");
+    let y = 13;
+    println!("direct change value {y}");
 }
 
 fn addr() {
     let a = 10;
     let a_ptr = &a as *const i32; // 获取 a 的内存地址（指针）
+    let a_ptr: *const i32 = &a; // 获取 a 的内存地址（指针）
     println!("a 的地址是: {:?}", a_ptr); // 0x7f0572aa04cc
     println!("a 的地址是: {:p}", &a); // 0x7f0572aa04cc, {:p} 内部转换为 &a as *const i32
     println!("a 的值: {:?}", &a); // 10

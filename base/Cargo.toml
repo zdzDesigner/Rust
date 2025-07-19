@@ -5,7 +5,7 @@ edition = "2024"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [workspace]
-members = [ "src/macro_lib","src/trait_lib"]
+members = ["src/trait_lib"]
 
 [dependencies]
 proc-macro2 = "1.0.95"
