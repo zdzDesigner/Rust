@@ -99,6 +99,7 @@ mod test_string {
         println!("string:{}", string);
 
         println!("str:{}", ret_str(&String::from("zdz")[0..]));
+        println!("str:{}", ret_str(&String::from("zdz")));
         println!("static_str:{}", ret_static_str());
 
         println!("first_word:{}", first_word(&String::from("hello world")));
@@ -163,5 +164,42 @@ mod test_string_base {
         let name_obj = String::from("zdz");
         let name_vec = name_obj.into_bytes();
         // println!("moved: {:?}", name_obj); // =========== 转移了
+    }
+}
+
+#[cfg(test)]
+mod test_multi_lines {
+    #[test]
+    fn test_lines() {
+        let multi_lines = "\
+common name,length (cm)
+Little penguin,33
+Yellow-eyed penguin,65
+Fiordland penguin,60
+Invalid,data";
+        println!("{multi_lines}");
+        for line in multi_lines.lines().enumerate() {
+            println!("{line:?}");
+        }
+        for (i, text) in multi_lines.lines().enumerate() {
+            println!("{i},{text}");
+            println!("{:?}", text.split(','));
+            for val in text.split(',') {
+                println!("{val}");
+            }
+            // if let v = text.split(',').remainder() {
+            //     println!("{:?}", v);
+            // }
+            // let list = text.split(',').map(|field| field.trim()).collect::<Vec<_>>();
+            let list = text.split(',').collect::<Vec<_>>();
+            println!("{list:?}");
+
+            let count = list[0].parse::<usize>();
+            println!("{count:?}");
+
+            if let Ok(count) = list[1].parse::<i32>() {
+                println!("== parse ok ==:{count}");
+            }
+        }
     }
 }
