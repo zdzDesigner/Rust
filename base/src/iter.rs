@@ -39,6 +39,9 @@ mod test_iter {
             print!("{}:{:?},", i, v);
         }
         println!("\n--------------");
+        let res = items.iter().fold(0, |acc, x| acc + x);
+        println!("res: {res}\n");
+        println!("\n--------------");
 
         println!("栈上: &items:{:p}", &items); // 栈上 0x74c6a3ffe018
         println!("tomap: {:?}", tomap(&items.to_vec()));
