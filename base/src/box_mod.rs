@@ -3,10 +3,10 @@ mod test_box {
 
     #[test]
     fn box_base() {
-        let v = Box::new(9);
+        let v = Box::new(9); // 堆上分配
         println!("v:{}", v);
         println!("heap:{:p}", v);
-        println!("stack:{:p}", &v);
+        println!("stack:{:p}", &v); //  二维指针
     }
 }
 
@@ -24,6 +24,22 @@ mod test_cons_list {
     fn cons_list() {
         let link = Cons(1, Box::new(Cons(2, Box::new(Cons(3, Box::new(Nil))))));
         println!("{:?}", link);
+        match link {
+            Cons(a, b) => {
+                println!("{a}");
+                println!("{b:?}");
+                println!("{:?}", *b);
+                match *b {
+                    Cons(a, b) => {
+                        println!("{a}");
+                        println!("{b:?}");
+                        println!("{:?}", *b);
+                    }
+                    Nil => {}
+                }
+            }
+            Nil => {}
+        }
     }
 
     // use std::rc::Rc;
@@ -61,6 +77,7 @@ mod test_custom_box {
     }
     impl<T> Deref for Box<T> {
         type Target = T;
+
         fn deref(&self) -> &Self::Target {
             &self.0
         }
@@ -73,7 +90,7 @@ mod test_custom_box {
         println!("{}", b.deref());
         println!("{}", *b.deref());
         assert_eq!(3, *b); // Deref
-                           // println!("{}", b.into()); // move
+        // println!("{}", b.into()); // move
     }
 
     // 隐士解引用
@@ -97,6 +114,7 @@ mod test_deref {
 
     impl<T> Deref for Box<T> {
         type Target = T;
+
         fn deref(&self) -> &Self::Target {
             &self.item
         }
@@ -143,7 +161,7 @@ mod test_drop {
             name: String::from("zdz"),
         };
         drop(user); // 强制丢弃
-                    // drop(user); // !!=> 编译器检测
+        // drop(user); // !!=> 编译器检测
         println!("强制丢弃!! ========");
         {
             let user = User {

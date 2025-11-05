@@ -1,0 +1,6 @@
+# 提高单行显示阈值
+max_width = 120  # 默认 100，增大允许单行显示
+
+# 强制简单结构体单行显示
+struct_field_align_threshold = 20  # 字段对齐阈值
+use_small_heuristics = "Max"       # 最大化紧凑显示
