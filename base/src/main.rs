@@ -78,7 +78,7 @@ fn main() {
     vec_mod::vec_logic();
     vec_mod::for_vec();
 
-    string_mod::str_const_to_string();
+    // string_mod::str_const_to_string();
     string_mod::str_method();
     string_mod::str_add();
     string_mod::str_format();

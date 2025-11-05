@@ -7,13 +7,17 @@ edition = "2024"
 # name = "server"
 # path = "./src/server.rs"
 
-[[bin]]
-name = "server1"
-path = "./src/main.rs"
+# [[bin]]
+# name = "server1"
+# path = "./src/main.rs"
 
 # [[bin]]
 # name = "proxy"
 # path = "./src/proxy.rs"
+
+[[bin]]
+name = "proxy2"
+path = "./src/proxy2.rs"
 
 [dependencies]
 actix-web = "4.11.0"

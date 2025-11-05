@@ -3,6 +3,10 @@ name = "course"
 version = "0.1.0"
 edition = "2024"
 
+[[bin]]
+name="debuger"
+path="src/debug/main.rs"
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [workspace]
 members = ["src/trait_lib"]

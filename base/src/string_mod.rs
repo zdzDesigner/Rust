@@ -1,13 +1,8 @@
-pub fn str_const_to_string() {
-    let s_obj = "aaaa str_const_to_string".to_string();
-    println!("{}", s_obj); // aaaa str_const_to_string
-    println!("{}", s_obj.to_string()); // aaaa str_const_to_string
-    println!("{}", s_obj.as_str()); // aaaa str_const_to_string
-}
-
+use crate::type_base::type_of;
 pub fn str_method() {
     let mut s = String::from("x");
 
+    type_of(s.clone());
     s.push_str("sss");
 
     println!("s:{}", s); // sss
@@ -126,7 +121,23 @@ mod test_string {
         let ips = String::from("127.0.0.1/127.0.0.2/127.0.0.3/127.0.0.4");
         let res = ips.split("/").next().unwrap();
         println!("res:{:?}", res);
+
+        // vec
+        let list: Vec<&str> = ips.split("/").collect();
+        println!("list:{:?}", list);
+        type_of(&list);
+        for v in &list {
+            println!("{v}");
+        }
+        let mut iter2 = list.iter();
+        while let Some(v) = iter2.next() {
+            println!("while: {v}");
+        }
+
+        // iter
         let mut iter = ips.split("/").into_iter();
+        type_of(iter.clone());
+        println!("nth:{:?}", iter.nth(2)); // 跳转到第二个元素(前面的元素已被消费掉)
         let res = iter.next();
         println!("res:{:?}", res);
         let res = iter.next();
@@ -137,8 +148,24 @@ mod test_string {
         println!("res:{:?}", res);
         let res = iter.next().unwrap_or("默认值");
         println!("res:{:?}", res);
-        let res = iter.next().expect("panic了, 这条信息会打印");
-        println!("res:{:?}", res);
+        type_of(iter.clone());
+        // let res = iter.next().expect("panic了, 这条信息会打印");
+        // println!("res:{:?}", res);
+    }
+    #[test]
+    fn str_to_string() {
+        let mut s_obj = "aaaa".to_string();
+        println!("{}", s_obj); // aaaa
+        println!("{}", s_obj.to_string()); // aaaa
+        println!("{}", s_obj.as_str()); // aaaa
+        println!("{:?}", s_obj.as_bytes()); // [97, 97, 97, 97]
+        s_obj.push('!');
+        println!("{}", s_obj); // aaaa
+    }
+    #[test]
+    fn change_string() {
+        let s_obj = String::from("aaaa");
+        // let ptr = unsafe { s_obj.as_ptr().add(1) };
     }
 }
 

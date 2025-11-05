@@ -1,9 +1,9 @@
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("Hello, world!");
-    let url = "https://www.baidu.com";
+    // let url = "https://www.baidu.com";
     // let url = "https://www.openmymind.net/atom.xml";
-    // let url = "https://www.google.com";
+    let url = "https://www.google.com";
     // let proxy_url = "http://0.0.0.0:20171";
     let proxy_url = "http://127.0.0.1:1081";
 

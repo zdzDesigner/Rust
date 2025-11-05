@@ -24,3 +24,11 @@ cargo t test_thread --  --nocapture --show-output
 
 
 
+## debugger
+
+```sh
+cargo build
+nnd ./target/debug/debuger
+```
+
+
