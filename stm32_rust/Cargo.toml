@@ -1,0 +1,17 @@
+[package]
+name = "stm32_rust"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# 零依赖！不引入任何 crates.io 包
+
+# 编译配置
+[profile.dev]
+panic = "abort" # 开发环境也使用 abort，减小体积
+
+[profile.release]
+panic = "abort"
+opt-level = "z"
+lto = true
+codegen-units = 1
