@@ -6,9 +6,9 @@
 
 ## 1. 为什么需要 `volatile`？
 
-假设你向 GPIO 数据寄存器写入 1（点亮 LED），然后紧接着再次写入 1（还是点亮 LED）。
-*   **普通 RAM**：编译器会认为第二次写入是多余的，直接**优化删除**。
-*   **硬件寄存器**：虽然值没变，但**电信号必须翻转或重新触发**。如果你被优化掉了，LED 可能就不亮了，或者中断标志位无法清除。
+假设你向一个硬件寄存器连续写入相同的值。
+*   **普通 RAM**：编译器可能认为第二次写入是多余的，直接**优化删除**。
+*   **硬件寄存器**：寄存器访问可能有副作用。写同一个值也可能清中断标志、启动外设操作或推进 FIFO；读操作也可能清状态位。因此每次访问都必须真实发生。
 
 我们需要告诉编译器：**“这块内存很特殊，每次访问都必须真实发生，绝对不能优化。”**
 
@@ -39,12 +39,14 @@ Rust 的标准引用（如 `&u32` 或 `&mut u32`）**默认是不带 volatile �
 
 ### Rust 代码示例 (0 依赖写法)
 
-#### ❌ 错误写法（可能被优化）
+#### ❌ 错误写法（普通引用不适合 MMIO）
 ```rust
 let ptr = 0x4002_1018 as *mut u32;
 let reg_ref = unsafe { &mut *ptr };
-reg_ref |= 0x01; // 编译器可能会优化这次操作
+*reg_ref |= 0x01;
 ```
+
+这不仅可能被优化，还会把 MMIO 地址伪装成普通 Rust 可变引用。`&mut T` 隐含唯一访问假设，而硬件寄存器可能被外设、中断或硬件本身异步修改。MMIO 应使用裸指针配合 `read_volatile/write_volatile`，或封装成 `VolatileCell`。
 
 #### ✅ 正确写法（使用 `core::ptr`）
 ```rust
@@ -64,22 +66,27 @@ unsafe {
 
 ## 4. 进阶：内存屏障 (Barriers)
 
-除了 `volatile`，现代 CPU 还有**乱序执行**的问题。你写了 A 寄存器，CPU 可能先执行 B 寄存器的写操作。
+除了 `volatile`，某些底层场景还需要**内存屏障**。例如修改系统控制寄存器、切换中断状态、进入低功耗，或需要确保外设写入在后续操作前完成时，可能需要 `DSB`/`ISB`。这和 volatile 解决的问题不同。
 
-*   **Zig**：通常编译器在处理 MMIO 时表现良好，但在严格同步时需要 `std.atomic.fence(.SeqCst)` 或内联汇编 `asm volatile("dsb");`。
-*   **Rust**：同样使用 `core::arch::asm!("dsb", "isb")` 或者原子操作的 fence 函数。
+*   **Zig**：严格同步时可使用 atomic fence，或在目标架构需要时插入 `dsb`/`isb` 等指令。
+*   **Rust**：可使用 `core::sync::atomic::compiler_fence` 限制编译器重排；需要真实 CPU 屏障时使用 `core::arch::asm!("dsb", "isb")` 等目标相关指令。
 
 ---
 
 ## 5. 对 STM32 项目的建议
 
-在你的 `stm32_rust` (0 依赖) 项目中，为了保持代码简洁且不被过度优化，我们可以采用一种折衷方案：**使用结构体引用，但在关键操作处插入 Compiler Barrier（编译器屏障）。**
+在你的 `stm32_rust` (0 依赖) 项目中，最直接、最严谨的方式是使用 `read_volatile/write_volatile`：
 
 ```rust
-// 读取后立即赋值给自己，或者加一个 asm!("") 伪汇编防止优化
-rcc.apb2enr |= 1 << 4;
-unsafe { core::arch::asm!("nop") }; // 简单的屏障暗示
+use core::ptr::{read_volatile, write_volatile};
+
+let apb2enr = 0x4002_1018 as *mut u32;
+unsafe {
+    let value = read_volatile(apb2enr);
+    write_volatile(apb2enr, value | (1 << 4));
+}
 ```
-*当然，最严谨的方式是用 `read_volatile/write_volatile`，但这会让代码变成一坨屎山。在实际工程中，通常会在第 100 行写一个泛型 wrapper `struct Volatile<T>(T)` 来解决这个问题。*
+
+但直接散落 `read_volatile/write_volatile` 会显著降低可读性。实际工程中通常封装一个 `VolatileCell<T>` 或寄存器 wrapper，让 MMIO 字段通过安全方法完成 volatile 访问。
 
 *注：本笔记记录了底层硬件访问的安全性问题，是 0 依赖开发的基石。*

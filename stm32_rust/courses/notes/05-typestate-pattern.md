@@ -8,7 +8,7 @@
 
 在嵌入式开发中，引脚（Pin）是有状态的。一个引脚可以被配置为输入、输出、复用功能等。
 *   **C 语言**：通常用 `enum PinMode` 记录状态，但在运行时检查。如果你在 Output 模式下调用 Read，可能会读到错误数据或导致硬件冲突，编译器无法阻止你。
-*   **Zig**：通常将 Mode 作为结构体的一个字段 `pin.mode`，并在函数调用时检查 `switch (pin.mode)`。这是**运行时检查**。
+*   **Zig**：可以把 Mode 作为运行时字段 `pin.mode` 并用 `switch (pin.mode)` 检查，也可以通过 `comptime` 参数在编译期建模。
 *   **Rust (Typestate)**：将状态提升到**类型系统**中。
     *   一个引脚不仅仅是 `Pin`，而是 `Pin<Mode::Input>` 或 `Pin<Mode::Output>`。
     *   **编译器保证**：你无法对 `Pin<Output>` 调用 `read()` 方法，因为该方法只定义在 `Pin<Input>` 上。
@@ -41,7 +41,10 @@ impl Pin<Input> {
 impl<M> Pin<M> {
     pub fn into_output(self) -> Pin<Output> {
         // 配置硬件寄存器...
-        Pin { pin_num: self.pin_num, _mode: PhantomData }
+        Pin {
+            pin_num: self.pin_num,
+            _mode: core::marker::PhantomData,
+        }
     }
 }
 
@@ -60,7 +63,7 @@ impl<M> Pin<M> {
 | 特性 | Zig (显式状态) | Rust (Typestate) | 差异核心 |
 | :--- | :--- | :--- | :--- |
 | **状态表示** | `struct Pin { mode: Mode, ... }` | `struct Pin<Mode>` (泛型) | 字段 vs 类型参数 |
-| **检查时机** | **运行时** (Runtime) | **编译期** (Compile-time) | Zig 灵活但需测试覆盖；Rust 严格但零开销 |
+| **检查时机** | 可运行时检查，也可用 `comptime` 编译期建模 | **编译期** (Compile-time) | Rust Typestate 默认把状态放进类型系统 |
 | **转换方式** | `pin.mode = .Output;` (修改字段) | `pin.into_output()` (所有权转移) | 修改 vs 替换 |
 | **内存开销** | `mode` 字段占用空间 (通常 1 byte) | `PhantomData` 占用 0 字节 | **零成本抽象** |
 
@@ -68,7 +71,7 @@ impl<M> Pin<M> {
 Rust 的所有权机制允许"消耗旧对象，返回新对象"。
 *   `into_output(self)` 拿走了旧的 `Pin<Input>`，它就不再存在了。
 *   返回的 `Pin<Output>` 是一个全新的类型。
-*   这保证了**状态的不可逆性**（除非你提供反向转换函数），从根源上杜绝了状态不一致的 Bug。
+*   这保证了旧状态对象不会继续被使用；状态是否可逆取决于 HAL 是否提供反向转换 API。
 
 ---
 

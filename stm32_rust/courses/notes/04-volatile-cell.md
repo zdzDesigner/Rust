@@ -52,12 +52,14 @@ pub struct VolatileCell<T> {
 
 impl<T: Copy> VolatileCell<T> {
     // 读取
+    #[inline(always)]
     pub fn get(&self) -> T {
         // self.value.get() 返回 *mut T，我们转为 *const T 读取
         unsafe { core::ptr::read_volatile(self.value.get() as *const T) }
     }
 
     // 写入
+    #[inline(always)]
     pub fn set(&self, value: T) {
         // self.value.get() 返回 *mut T，直接写入
         unsafe { core::ptr::write_volatile(self.value.get(), value) }
@@ -68,7 +70,7 @@ impl<T: Copy> VolatileCell<T> {
 ### 优势
 *   **安全性**：既防止了编译器优化（Volatile），又符合 Rust 的别名规则（UnsafeCell）。
 *   **可读性**：`rcc.apb2enr.set(...)` 非常直观。
-*   **零成本**：`inline(always)` 确保编译器将其内联，生成的汇编代码与手写一致。
+*   **低开销**：`inline(always)` 让编译器倾向于内联，通常可生成与手写 volatile 访问等价的机器码。
 
 ---
 
@@ -82,6 +84,6 @@ let rcc = &*RCC_BASE; // 注意：这里我们获取的是共享引用 &RCC_Regs
 // 但依然可以安全地写入，因为 VolatileCell 处理了内部可变性
 rcc.apb2enr.set(0x01); 
 ```
-这种设计是 Rust 嵌入式 HAL 库（如 `stm32f1xx-hal`）处理内存映射 I/O 的标准范式。
+这种设计是 Rust 嵌入式底层寄存器封装中的常见模式；实际 HAL 往往通过 PAC/svd2rust 生成的寄存器 API 间接使用类似思想。
 
 *注：本笔记记录了 0 依赖项目中硬件访问的高级封装方法，特别是解决了中断环境下的别名问题。*

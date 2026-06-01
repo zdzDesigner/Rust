@@ -40,10 +40,10 @@ panic = "abort"      # Panic 时直接 abort，节省 unwind 代码体积
 ### 2.2 对二进制的影响
 1.  **Profile 优化**：
     *   `opt-level = "z"` 告知编译器使用 `-Oz` 标志，显著减小 `.text` 段体积。
-    *   `panic = "abort"` 移除 unwind 表，这在嵌入式中是必须的，因为 MCU 上没有 OS 来处理栈展开。
+    *   `panic = "abort"` 避免引入 unwind 相关代码，是裸机嵌入式中最常见的选择，可减小体积并简化运行时要求。
 
 ### 2.3 对比 Zig / Go
-*   **Zig**: 优化级别在 `build.zig` 中通过 `exe.setOptimizeMode(.ReleaseSmall)` 设置。Zig 默认就是 "abort" 语义（在 `freestanding` 下），没有复杂的 Panic 处理选项。
+*   **Zig**: 优化级别在 `build.zig` 中通过 `exe.setOptimizeMode(.ReleaseSmall)` 设置。Zig 没有 Rust 式 stack unwinding；panic 通常走 trap/abort 或用户自定义 panic handler。
 *   **Go**: TinyGo 默认带有 Panic 打印机制（即使不处理也会打印 panic 信息），很难完全剥离，除非使用极其底层的 `//go:export` 绕过 runtime。
 
 ---
@@ -65,7 +65,7 @@ linker = "rust-lld"
 
 ### 3.2 对二进制的影响
 1.  **指令集架构**：决定了生成 Thumb-2 指令集。
-2.  **标准库替换**：告诉 `rustc` 不要链接 `std`，而是使用 `core`。
+2.  **目标平台选择**：告诉 `rustc` 生成 Cortex-M3 Thumb 指令、使用裸机 ABI。是否链接 `std` 由源码中的 `#![no_std]` 决定；在该 target 下通常只能使用 `core`/`alloc` 这类不依赖 OS 的库。
 
 ### 3.3 对比 Zig / Go
 *   **Zig**: 在 `build.zig` 中配置目标：
@@ -138,8 +138,8 @@ SECTIONS
 
 **重要澄清**：
 *   在 OS 环境下，Zig 的 `std.start` 确实会帮你处理 Args 解析和 Panic 捕获。
-*   但在 **`freestanding` (裸机)** 环境下，Zig 的 `std` 库大部分功能不可用，且**不会**自动生成启动代码。你必须像我们在 Rust 中一样，手写 `ResetHandler` 来初始化内存。
-*   这与 Go (TinyGo) 形成鲜明对比，后者总是带着一个微型的 Runtime（包含 GC 和调度器初始化），无法做到真正的“零依赖裸机”。
+*   但在 **`freestanding` (裸机)** 环境下，Zig `std` 中依赖 OS 的部分不可用，且**不会**自动生成完整 MCU 启动代码。平台无关的工具模块仍可使用；向量表、BSS/Data 初始化通常仍需要项目自己处理。
+*   这与 Go (TinyGo) 形成鲜明对比，后者面向裸机时通常仍带有自己的 runtime 支持；与手写 Rust/Zig 启动代码相比，底层初始化细节较多被 runtime 隐藏。
 
 ---
 

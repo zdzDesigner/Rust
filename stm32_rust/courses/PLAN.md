@@ -37,8 +37,8 @@ stm32_rust/
 
 | 阶段 | 天数 | Rust 核心概念 (Concept) | HAL 库开发任务 (`src/`) | 验证示例 (`examples/`) | Zig 对照点 |
 |:---|:---:|:---|:---|:---|:---|
-| **Phase 1** | Day 1 | `no_std` 入口、`volatile` 指针操作 | 创建 PAC 依赖、配置环境 | `day01_blinky.rs` (点灯) | `@ptrFromInt` vs `volatile` |
-| | Day 2 | **类型状态机 (Typestate)**、`Into<Trait>` | 实现 `gpio.rs`：引脚模式转换 | `day02_gpio_state.rs` (按键输入) | Zig 显式状态枚举 |
+| **Phase 1** | Day 1 | `no_std` 入口、`volatile` 指针操作 | 手写最小 PAC 寄存器定义、配置环境 | `day01_blinky.rs` (点灯) | `@ptrFromInt` vs `volatile` |
+| | Day 2 | **类型状态机 (Typestate)**、`Into<T>` / `From<T>` | 实现 `gpio.rs`：引脚模式转换 | `day02_gpio_state.rs` (按键输入) | Zig 显式状态枚举 |
 | | Day 3 | 时钟树 (RCC)、所有权传递 | 实现 `rcc.rs`：总线时钟管理 | `day03_rcc_led.rs` (先开时钟再点灯) | Zig 显式初始化结构体 |
 | | Day 4 | 中断 (NVIC)、`#[interrupt]` 宏 | 封装中断向量、临界区 | `day04_exti_button.rs` (外部中断) | `comptime` 中断表 |
 
@@ -54,7 +54,7 @@ stm32_rust/
 
 | 阶段 | 天数 | Rust 核心概念 (Concept) | HAL 库开发任务 (`src/`) | 验证示例 (`examples/`) | Zig 对照点 |
 |:---|:---:|:---|:---|:---|:---|
-| **Phase 3** | Day 8 | `static mut` 替代、`Mutex` | 封装全局变量安全访问 | `day08_static_log.rs` (全局日志) | `std.Thread.Mutex` |
+| **Phase 3** | Day 8 | 替代 `static mut` 的安全方案、`Mutex` | 封装全局变量安全访问 | `day08_static_log.rs` (全局日志) | `std.Thread.Mutex` |
 | | Day 9 | DMA、所有权转移 API | 实现 `dma.rs`：基于所有权的传输 | `day09_dma_serial.rs` (零拷贝发送) | `*volatile` 传递 |
 | | Day 10 | `Send`/`Sync`、原子操作 | 实现 `atomic.rs`：无锁缓冲区 | `day10_ring_buffer.rs` | `std.atomic` |
 
