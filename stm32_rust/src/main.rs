@@ -65,10 +65,9 @@ pub unsafe extern "C" fn ResetHandler() -> ! {
     }
 
     // 1. 清零 .bss 段
-    // 计算长度。注意：使用 &mut 获取指针在 unsafe 块中是安全的，
-    // 因为此时我们是唯一访问者，且链接脚本保证了范围有效。
-    let bss_start = &mut _sbss as *mut u8;
-    let bss_end = &mut _ebss as *mut u8;
+    // 计算长度。这里直接创建原始指针，避免对 mutable static 创建引用。
+    let bss_start = &raw mut _sbss;
+    let bss_end = &raw mut _ebss;
     let bss_len = bss_end.offset_from(bss_start) as usize;
 
     if bss_len > 0 {
