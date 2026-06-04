@@ -1,0 +1,62 @@
+# 第 5 课：外部中断 (EXTI)
+#
+# 使用方法：
+#   renode --disable-xwt --console renode/resc/lesson05_exti.resc
+#
+# 验证步骤：
+#   通过 gpioPortA.pin0 制造上升沿触发 EXTI0 中断
+
+using sysbus
+
+mach create
+machine LoadPlatformDescription @renode/stm32f103.repl
+
+$bin=@zig-out/bin/stm32-zig-lesson05_exti.elf
+
+macro reset
+"""
+    sysbus LoadELF $bin
+"""
+runMacro $reset
+
+showAnalyzer usart1
+
+echo "========================================"
+echo "  Lesson 5: EXTI Interrupt"
+echo "========================================"
+echo ""
+
+start
+sleep 1
+
+echo "--- 初始状态 ---"
+echo "GPIOB_ODR (PB12 LED):"
+sysbus ReadDoubleWord 0x40010C0C
+
+echo ""
+echo "--- 第 1 次触发中断 (PA0 上升沿) ---"
+gpioPortA.pin0 true
+sleep 0.2
+gpioPortA.pin0 false
+sleep 0.5
+
+echo "GPIOB_ODR (PB12 应翻转为 1):"
+sysbus ReadDoubleWord 0x40010C0C
+
+echo ""
+echo "--- 第 2 次触发中断 ---"
+gpioPortA.pin0 true
+sleep 0.2
+gpioPortA.pin0 false
+sleep 0.5
+
+echo "GPIOB_ODR (PB12 应翻转回 0):"
+sysbus ReadDoubleWord 0x40010C0C
+
+echo ""
+echo "========================================"
+echo "  Lesson 5 Complete!"
+echo "  串口输出中应看到 [EXTI0] 中断触发信息"
+echo "========================================"
+
+quit

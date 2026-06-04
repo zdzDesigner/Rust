@@ -1,0 +1,52 @@
+# 第 1 课：Hello Renode 运行脚本
+# 目标：运行第一个 Renode 仿真程序
+#
+# 使用方法：
+#   renode --disable-xwt --console renode/resc/lesson01_hello.resc
+
+using sysbus
+
+# 1. 创建机器
+mach create
+
+# 2. 加载平台描述（STM32F103 开发板）
+machine LoadPlatformDescription @renode/stm32f103.repl
+
+# 3. 设置日志级别（可选，用于调试）
+# logging setLogLevel -1  # 显示所有日志
+
+# 4. 加载 ELF 固件
+$bin=@target/thumbv7m-none-eabi/debug/stm32_rust
+
+sysbus LoadELF $bin
+
+# 5. 输出提示
+echo ""
+echo "========================================"
+echo "正在运行 LED 闪烁程序..."
+echo "PB12 将在仿真中翻转"
+echo "========================================"
+
+# 6. 开始运行
+start
+
+# 7. 运行 5 秒后查看状态
+sleep 5
+
+echo ""
+echo "========================================"
+echo "  运行 5 秒后的状态"
+echo "========================================"
+
+# 8. 查看 GPIO 寄存器 (对应代码中的 PC13)
+echo ""
+echo "GPIOC_CRH (0x40011004) - PC13 配置:"
+sysbus ReadDoubleWord 0x40011004
+
+echo ""
+echo "GPIOC_ODR (0x4001100C) - PC13 状态:"
+sysbus ReadDoubleWord 0x4001100C
+
+
+# 9. 退出
+quit

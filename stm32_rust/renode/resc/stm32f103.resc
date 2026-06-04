@@ -1,0 +1,25 @@
+using sysbus
+
+# 创建机器
+mach create
+
+# 加载平台描述
+machine LoadPlatformDescription @renode/stm32f103.repl
+
+# 指定固件 (修改这里切换不同示例)
+$bin=@zig-out/bin/stm32-zig-renode_test.elf
+
+# 打开 USART1 终端窗口 (可看到串口输出)
+showAnalyzer usart1
+
+# 定义 reset 宏
+macro reset
+"""
+    sysbus LoadELF $bin
+"""
+
+# 执行 reset
+runMacro $reset
+
+# 开启 GDB 调试服务 (端口 3333)
+machine StartGdbServer 3333 true

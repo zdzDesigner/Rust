@@ -1,0 +1,56 @@
+# 第 4 课：GPIO 输入 - 按钮检测
+#
+# 使用方法：
+#   renode --disable-xwt --console renode/resc/lesson04_gpio_input.resc
+#
+# 验证步骤：
+#   程序运行后，通过 Monitor 模拟按钮按下
+
+using sysbus
+
+mach create
+machine LoadPlatformDescription @renode/stm32f103.repl
+
+$bin=@zig-out/bin/stm32-zig-lesson04_gpio_input.elf
+sysbus LoadELF $bin
+
+echo "========================================"
+echo "  Lesson 4: GPIO Input (Button + LED)"
+echo "========================================"
+echo ""
+
+start
+sleep 1
+
+echo "--- 初始状态 ---"
+echo "GPIOA_IDR (PA0 按钮):"
+sysbus ReadDoubleWord 0x40010808
+echo "GPIOB_ODR (PB12 LED):"
+sysbus ReadDoubleWord 0x40010C0C
+
+echo ""
+echo "--- 模拟按钮按下 (PA0 = 1) ---"
+gpioPortA.pin0 true
+sleep 0.5
+
+echo "GPIOA_IDR:"
+sysbus ReadDoubleWord 0x40010808
+echo "GPIOB_ODR (PB12 应变为 1):"
+sysbus ReadDoubleWord 0x40010C0C
+
+echo ""
+echo "--- 模拟按钮释放 (PA0 = 0) ---"
+gpioPortA.pin0 false
+sleep 0.5
+
+echo "GPIOA_IDR:"
+sysbus ReadDoubleWord 0x40010808
+echo "GPIOB_ODR (PB12 应变为 0):"
+sysbus ReadDoubleWord 0x40010C0C
+
+echo ""
+echo "========================================"
+echo "  Lesson 4 Complete!"
+echo "========================================"
+
+quit

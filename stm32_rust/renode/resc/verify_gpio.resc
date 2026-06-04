@@ -1,0 +1,37 @@
+using sysbus
+
+mach create
+machine LoadPlatformDescription @renode/stm32f103.repl
+
+$bin=@zig-out/bin/stm32-zig-blinky_renode.elf
+
+macro reset
+"""
+    sysbus LoadELF $bin
+"""
+
+runMacro $reset
+
+start
+
+# 等待程序初始化完成 (跳过 hal.init() 中的 PLL 等待死循环)
+sleep 0.5
+
+# 读取 GPIOB 寄存器 (基地址 0x40010C00)
+# CRH = 0x04, ODR = 0x0C
+echo "=== GPIO PB12 Verification ==="
+echo "CRH (0x40010C04) - PB12 config in bits 16-19:"
+sysbus ReadDoubleWord 0x40010C04
+echo "ODR (0x40010C0C) - Initial:"
+sysbus ReadDoubleWord 0x40010C0C
+
+# 等待 3 秒延时 + 一点余量
+sleep 3.5
+
+# 读取翻转后状态
+echo ""
+echo "ODR (0x40010C0C) - After 3.5s (PB12 should toggle):"
+sysbus ReadDoubleWord 0x40010C0C
+
+echo ""
+echo "=== Check: ODR bit12 (0x1000) changed = GPIO success ==="

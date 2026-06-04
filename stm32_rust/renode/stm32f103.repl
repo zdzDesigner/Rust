@@ -1,0 +1,161 @@
+// ============================================================
+// STM32F103 Platform Description for Renode
+// Chip: STM32F103C8T6 (Cortex-M3, 72MHz, 64K Flash, 20K RAM)
+// ============================================================
+
+// --- Memory ---
+// FSMC 外部存储控制器映射区域
+fsmcBank1: Memory.MappedMemory @ sysbus 0x60000000
+    size: 0x10000000
+
+// SRAM: 起始 0x20000000 (实际 20K, 这里给了大范围方便仿真)
+sram: Memory.MappedMemory @ sysbus 0x20000000
+    size: 0x10000000
+
+// Flash: 起始 0x08000000, 同时映射到 0x00000000 (boot alias)
+flash: Memory.MappedMemory @ sysbus 0x00000000
+    size: 0x20000000
+
+// --- CPU Core ---
+// Cortex-M3 内核, 连接 NVIC
+cpu: CPU.CortexM @ sysbus
+    cpuType: "cortex-m3"
+    nvic: nvic
+
+// NVIC: 嵌套向量中断控制器
+// priorityMask: STM32F103 使用 4 位优先级 (高 4 位有效, 低 4 位为 0)
+// systickFrequency: 系统滴答定时器时钟频率 72MHz
+nvic: IRQControllers.NVIC @ sysbus 0xE000E000
+    priorityMask: 0xF0
+    systickFrequency: 72000000
+    IRQ -> cpu@0
+
+// --- UART/USART ---
+// USART1: APB2 总线, TX=PA9 RX=PA10, IRQ=37
+usart1: UART.STM32_UART @ sysbus <0x40013800, +0x100>
+    -> nvic@37
+
+// USART2: APB1 总线, TX=PA2 RX=PA3, IRQ=38
+usart2: UART.STM32_UART @ sysbus <0x40004400, +0x100>
+    -> nvic@38
+
+// USART3: APB1 总线, TX=PB10 RX=PB11, IRQ=39
+usart3: UART.STM32_UART @ sysbus <0x40004800, +0x100>
+    -> nvic@39
+
+// UART4: APB1 总线, IRQ=52
+usart4: UART.STM32_UART @ sysbus <0x40004C00, +0x100>
+    -> nvic@52
+
+// UART5: APB1 总线, IRQ=53
+usart5: UART.STM32_UART @ sysbus <0x40005000, +0x100>
+    -> nvic@53
+
+// --- I2C ---
+// I2C1: SCL=PB6 SDA=PB7, 事件中断=31, 错误中断=32
+i2c1: I2C.STM32F4_I2C @ sysbus 0x40005400
+    EventInterrupt -> nvic@31
+    ErrorInterrupt -> nvic@32
+
+// I2C2: SCL=PB10 SDA=PB11, 事件中断=33, 错误中断=34
+i2c2: I2C.STM32F4_I2C @ sysbus 0x40005800
+    EventInterrupt -> nvic@33
+    ErrorInterrupt -> nvic@34
+
+// --- SPI ---
+// SPI1: APB2 总线, SCK=PA5 MISO=PA6 MOSI=PA7, IRQ=35
+// 注意: STM32SPI 有多个 GPIO 属性, 必须显式指定 IRQ
+spi1: SPI.STM32SPI @ sysbus 0x40013000
+    IRQ -> nvic@35
+
+// SPI2: APB1 总线, SCK=PB13 MISO=PB14 MOSI=PB15, IRQ=36
+spi2: SPI.STM32SPI @ sysbus 0x40003800
+    IRQ -> nvic@36
+
+// SPI3: APB1 总线, SCK=PB3 MISO=PB4 MOSI=PB5, IRQ=51
+spi3: SPI.STM32SPI @ sysbus 0x40003C00
+    IRQ -> nvic@51
+
+// --- EXTI ---
+// 外部中断控制器: 19 条中断线
+// EXTI0~4 各自独立连接 NVIC (IRQ 6~10)
+// EXTI5~9 合并为一个中断 (IRQ 23)
+// EXTI10~15 合并为一个中断 (IRQ 40)
+exti: IRQControllers.STM32F4_EXTI @ sysbus 0x40010400
+    numberOfOutputLines: 19
+    [0-4] -> nvic@[6-10]
+    [5-9] -> nvicInput23@[0-4]
+    [10-15] -> nvicInput40@[0-5]
+
+// EXTI5~9 合并输入
+nvicInput23: Miscellaneous.CombinedInput @ none
+    numberOfInputs: 5
+    -> nvic@23
+
+// EXTI10~15 合并输入
+nvicInput40: Miscellaneous.CombinedInput @ none
+    numberOfInputs: 6
+    -> nvic@40
+
+// --- GPIO ---
+// STM32F103 有 PA~PG 共 7 组 GPIO, 每组 16 个引脚
+// 每个引脚可连接到 EXTI 对应的中断线
+gpioPortA: GPIOPort.STM32F1GPIOPort @ sysbus <0x40010800, +0x400>
+    [0-15] -> exti@[0-15]
+
+gpioPortB: GPIOPort.STM32F1GPIOPort @ sysbus <0x40010C00, +0x400>
+    [0-15] -> exti@[0-15]
+
+gpioPortC: GPIOPort.STM32F1GPIOPort @ sysbus <0x40011000, +0x400>
+    [0-15] -> exti@[0-15]
+
+gpioPortD: GPIOPort.STM32F1GPIOPort @ sysbus <0x40011400, +0x400>
+    [0-15] -> exti@[0-15]
+
+gpioPortE: GPIOPort.STM32F1GPIOPort @ sysbus <0x40011800, +0x400>
+    [0-15] -> exti@[0-15]
+
+gpioPortF: GPIOPort.STM32F1GPIOPort @ sysbus <0x40011C00, +0x400>
+    [0-15] -> exti@[0-15]
+
+gpioPortG: GPIOPort.STM32F1GPIOPort @ sysbus <0x40012000, +0x400>
+    [0-15] -> exti@[0-15]
+
+// --- Timers ---
+// TIM2: 通用定时器, APB1 总线, 16-bit, 4 通道, IRQ=28
+timer2: Timers.STM32_Timer @ sysbus <0x40000000, +0x400>
+    frequency: 72000000
+    initialLimit: 0xFFFF
+    -> nvic@28
+
+// TIM3: 通用定时器, APB1 总线, 16-bit, 4 通道, IRQ=29
+timer3: Timers.STM32_Timer @ sysbus <0x40000400, +0x400>
+    frequency: 72000000
+    initialLimit: 0xFFFF
+    -> nvic@29
+
+// TIM4: 通用定时器, APB1 总线, 16-bit, 4 通道, IRQ=30
+timer4: Timers.STM32_Timer @ sysbus <0x40000800, +0x400>
+    frequency: 72000000
+    initialLimit: 0xFFFF
+    -> nvic@30
+
+// --- DMA ---
+// DMA1: 7 个通道, IRQ=11~17 (每通道一个中断)
+dma1: DMA.STM32DMA @ sysbus 0x40020000
+    [0-6] -> nvic@[11-17]
+
+// --- 未完全仿真的外设 ---
+// Renode 没有 STM32 RCC 模型, 用 Tag 返回固定值模拟寄存器读取
+// 注意: Tag 是只读模拟, 写入不会改变返回值, 因此依赖 RCC 状态位
+// 轮询的代码 (如 PLL 启动等待) 在仿真中可能会卡死
+sysbus:
+    init:
+        // RCC_CR: HSION=1 HSIRDY=1 HSEON=1 HSERDY=1 PLLRDY=1
+        Tag <0x40021000, 0x40021003> "RCC_CR" 0x0A020083
+        // RCC_CFGR: SWS=PLL (系统时钟已切换到 PLL)
+        Tag <0x40021004, 0x40021007> "RCC_CFGR" 0x00000008
+        // FLASH_ACR: 预取缓冲区使能 + 2 等待周期
+        Tag <0x40022000, 0x40022003> "FLASH_ACR" 0x00000030
+        // PWR_CR: 默认值
+        Tag <0x40007000, 0x40007003> "PWR_CR" 0x00000000

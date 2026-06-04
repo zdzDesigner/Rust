@@ -1,0 +1,22 @@
+using sysbus
+
+mach create
+machine LoadPlatformDescription @renode/stm32f103.repl
+
+$bin=@zig-out/bin/stm32-zig-watchdog_fault_reboot.elf
+
+showAnalyzer usart1
+
+macro reset
+"""
+    sysbus LoadELF $bin
+"""
+
+runMacro $reset
+machine StartGdbServer 3333 true
+
+# 说明：当前平台描述里没有 IWDG 外设模型，所以这个脚本主要用于：
+# 1. 验证程序能启动到 watchdog_fault_reboot.main
+# 2. 观察统一 crash dump live 输出
+# 3. 用 GDB 检查 hal.crash_dump 裸入口和 stacked_pc
+# 真正的“等待 IWDG 复位，再次启动打印上次 crash”仍需真机验证。

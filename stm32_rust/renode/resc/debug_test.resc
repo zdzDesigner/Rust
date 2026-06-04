@@ -1,0 +1,19 @@
+using sysbus
+
+mach create
+machine LoadPlatformDescription @renode/stm32f103.repl
+
+$bin=@zig-out/bin/stm32-zig-debug_demo.elf
+
+macro reset
+"""
+    sysbus LoadELF $bin
+"""
+
+runMacro $reset
+
+# 打开 USART1 分析器窗口 (无头模式下输出到日志)
+showAnalyzer usart1
+
+start
+sleep 5

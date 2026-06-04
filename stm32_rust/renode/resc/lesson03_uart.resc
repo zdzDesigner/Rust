@@ -1,0 +1,59 @@
+# 第 3 课：UART 串口调试脚本
+# 目标：使用 Renode 的串口分析器查看输出
+#
+# 使用方法：
+#   renode --disable-xwt --console renode/resc/lesson03_uart.resc
+
+using sysbus
+
+mach create
+machine LoadPlatformDescription @renode/stm32f103.repl
+
+$bin=@zig-out/bin/stm32-zig-lesson03_uart.elf
+
+macro reset
+"""
+    sysbus LoadELF $bin
+"""
+runMacro $reset
+
+echo "========================================"
+echo "  Lesson 3: UART Serial Output"
+echo "========================================"
+echo ""
+
+# 打开串口分析器（无头模式下输出到控制台日志）
+showAnalyzer usart1
+
+echo "开始运行..."
+echo ""
+
+start
+sleep 5
+
+echo ""
+echo "========================================"
+echo "  运行 5 秒后检查 USART 状态"
+echo "========================================"
+echo ""
+
+echo "USART1_SR (0x40013800) - 状态寄存器:"
+sysbus ReadDoubleWord 0x40013800
+
+echo ""
+echo "USART1_BRR (0x40013808) - 波特率:"
+sysbus ReadDoubleWord 0x40013808
+echo "(预期：0x45 = 69 = 8MHz/115200，Renode 用 HSI 8MHz)"
+
+echo ""
+echo "USART1_CR1 (0x4001380C) - 控制寄存器:"
+sysbus ReadDoubleWord 0x4001380C
+echo "(预期：bit13=UE, bit3=TE, bit2=RE 均为 1)"
+
+echo ""
+echo "========================================"
+echo "  Lesson 3 Complete!"
+echo "  串口输出应在上方 usart1 日志中可见"
+echo "========================================"
+
+quit

@@ -1,0 +1,21 @@
+using sysbus
+
+mach create
+machine LoadPlatformDescription @renode/stm32f103.repl
+
+$bin=@zig-out/bin/stm32-zig-renode_test.elf
+
+# 无头模式: USART1 输出到 Renode 控制台
+showAnalyzer usart1
+
+# 同时创建 USART1 socket server (可选, 用 telnet localhost 3456 连接查看)
+# emulation CreateServerSocketTerminal 3456 "usart1_socket"
+# connector Connect usart1 usart1_socket
+
+macro reset
+"""
+    sysbus LoadELF $bin
+"""
+
+runMacro $reset
+machine StartGdbServer 3333 true

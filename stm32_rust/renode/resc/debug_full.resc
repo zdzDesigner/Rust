@@ -1,0 +1,39 @@
+using sysbus
+
+mach create
+machine LoadPlatformDescription @renode/stm32f103.repl
+
+$bin=@zig-out/bin/stm32-zig-renode_test.elf
+
+macro reset
+"""
+    sysbus LoadELF $bin
+"""
+
+runMacro $reset
+
+# 启用详细日志
+logging setLogLevel Debug
+
+# 捕获 USART1 输出
+showAnalyzer usart1
+
+# 监控 RCC 寄存器访问（帮助定位问题）
+# sysbus MonitorAccess 0x40021000 0x40021020
+
+start
+sleep 5
+
+# 输出调试信息
+echo "=== 调试信息 ==="
+echo "CPU 状态:"
+cpu
+echo ""
+echo "外设列表:"
+peripherals
+echo ""
+echo "内存内容 (向量表):"
+sysbus ReadDoubleWord 0x08000000
+sysbus ReadDoubleWord 0x08000004
+
+quit
