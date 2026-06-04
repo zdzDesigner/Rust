@@ -16,7 +16,7 @@ machine LoadPlatformDescription @renode/stm32f103.repl
 # logging setLogLevel -1  # 显示所有日志
 
 # 4. 加载 ELF 固件
-$bin=@target/thumbv7m-none-eabi/debug/stm32_rust
+$bin=@dist/day01_blinky.elf
 
 sysbus LoadELF $bin
 

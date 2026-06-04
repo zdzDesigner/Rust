@@ -4,3 +4,4 @@
 pub mod gpio;
 pub mod rcc;
 pub mod time;
+pub mod volatile;
