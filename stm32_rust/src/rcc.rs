@@ -44,6 +44,7 @@ struct Regs {
 }
 
 const RCC_BASE: *const Regs = 0x4002_1000 as *const Regs;
+const IOPBEN: u32 = 1 << 3;
 const IOPCEN: u32 = 1 << 4;
 
 pub struct Rcc {
@@ -53,6 +54,15 @@ pub struct Rcc {
 impl Rcc {
     pub const fn new() -> Self {
         Self { regs: RCC_BASE }
+    }
+
+    pub fn enable_gpiob(&self) {
+        let regs = unsafe { &*self.regs };
+        let current = regs.apb2enr.get();
+        regs.apb2enr.set(current | IOPBEN);
+
+        // 使能时钟后插入屏障，避免后续 GPIO 访问过早执行。
+        unsafe { asm!("dsb", "isb") };
     }
 
     pub fn enable_gpioc(&self) {
