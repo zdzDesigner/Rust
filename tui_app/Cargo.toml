@@ -1,0 +1,12 @@
+[package]
+name = "tui_app"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+ratatui = "0.28"
+crossterm = "0.28"
+# 可选：更好的错误处理
+anyhow = "1.0"
+# 可选：Unicode 宽度计算
+unicode-width = "0.2"

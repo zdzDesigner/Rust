@@ -89,9 +89,8 @@ fn main() -> ! {
     let (rcc, gpioc) = unsafe { (&*RCC_BASE, &*GPIOC_BASE) };
 
     // 1. 使能 GPIOC 时钟 (IOPCEN = Bit 4)
-    // 使用 VolatileCell 的 get/set 组合进行 Read-Modify-Write
-    let current_apb2enr = rcc.apb2enr.get();
-    rcc.apb2enr.set(current_apb2enr | (1 << 4));
+    // 使用 VolatileCell 的 update 进行 Read-Modify-Write。
+    rcc.apb2enr.update(|value| value | (1 << 4));
 
     // 内存屏障：确保时钟开启后再操作 GPIO
     unsafe { asm!("dsb", "isb") };
@@ -103,19 +102,19 @@ fn main() -> ! {
     let shift = 20;
     let mode_bits = 0b0001;
 
-    let current_crh = gpioc.crh.get();
     // 清除旧配置，写入新配置
-    let new_crh = (current_crh & !(0xF << shift)) | (mode_bits << shift);
-    gpioc.crh.set(new_crh);
+    gpioc
+        .crh
+        .update(|value| (value & !(0xF << shift)) | (mode_bits << shift));
 
     // 3. 主循环
     loop {
         // 点亮 LED (BSRR 低 16 位有效)
-        gpioc.bsrr.set(1 << 13);
+        gpioc.bsrr.write(1 << 13);
         busy_delay();
-        
+
         // 熄灭 LED (BSRR 高 16 位有效)
-        gpioc.bsrr.set(1 << (13 + 16));
+        gpioc.bsrr.write(1 << (13 + 16));
         busy_delay();
     }
 }

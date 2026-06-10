@@ -264,7 +264,7 @@ let regs = unsafe { &*self.regs };
 
 1. 我手里有一个寄存器块基地址的裸指针
 2. 我现在临时把它提升成 `&Regs` 视图
-3. 这样我就能方便地写 `regs.apb2enr.get()` 这种字段访问
+3. 这样我就能方便地写 `regs.apb2enr.read()` / `regs.apb2enr.write(...)` 这种字段访问
 
 ---
 
@@ -275,7 +275,7 @@ let regs = unsafe { &*self.regs };
 如果只保留裸指针，你后面会写成：
 
 ```rust
-unsafe { (*self.regs).apb2enr.get() }
+unsafe { (*self.regs).apb2enr.read() }
 ```
 
 这当然能工作，但可读性更差。
@@ -289,7 +289,7 @@ let regs = unsafe { &*self.regs };
 之后就能自然写：
 
 ```rust
-let current = regs.apb2enr.get();
+let current = regs.apb2enr.read();
 ```
 
 所以这个转换的目的不是“把指针又变回指针”，而是：
@@ -333,8 +333,9 @@ apb2enr: VolatileCell<u32>
 然后这样访问：
 
 ```rust
-regs.apb2enr.get()
-regs.apb2enr.set(...)
+regs.apb2enr.read()
+regs.apb2enr.write(...)
+regs.apb2enr.update(|value| value | BIT)
 ```
 
 这样读写会走 volatile 语义。

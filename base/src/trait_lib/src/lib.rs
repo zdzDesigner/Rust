@@ -1,3 +1,11 @@
+pub trait Pin<T> {}
+impl<T> Pin<T> for i32 {}
+
+pub trait MyAdd<A, B> {}
+impl<A, B> MyAdd<A, B> for i32 {}
+
+
+
 pub trait Summary {
     fn summarize(&self) -> String;
     fn about(&self) -> String {

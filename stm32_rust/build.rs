@@ -17,7 +17,7 @@ fn main() {
 
     // 2. 告诉链接器去哪里找脚本
     println!("cargo:rustc-link-search={}", out.display());
-    
+
     // 3. 告诉链接器使用 memory.x
     println!("cargo:rustc-link-arg=-Tmemory.x");
 

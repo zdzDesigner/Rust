@@ -85,13 +85,13 @@
 
 **目标**：先建立 `core` 最重要的底层语义认知。优先解决“内存怎么表示、指针怎么访问、类型系统怎么约束”这三个问题。
 
-| 天数 | 阅读重点 | 必须搞清的问题 | 最小实验 |
-| :--- | :--- | :--- | :--- |
-| Day 1 | `core` 全局边界 | `core` / `alloc` / `std` 分别负责什么 | 列出常用 API 属于哪个 crate |
-| Day 2 | `src/marker.rs` | `Send` / `Sync` / `Unpin`、`Sized`、`PhantomData` 的区别 | 写 3 个带 `PhantomData` / 裸指针的小类型，观察 trait 推导 |
-| Day 3 | `src/mem/mod.rs` | `size_of`、`align_of`、`MaybeUninit`、`transmute` 的边界 | 写一个数组分步初始化例子 |
-| Day 4 | `src/ptr/mod.rs` | `read_volatile`、`write_volatile`、`addr_of!`、`read_unaligned` 各解决什么问题 | 手写最小 `VolatileCell<T>` |
-| Day 5 | 周总结 | 能否解释未初始化、未对齐、volatile、别名规则的区别 | 写一页“内存模型小抄” |
+| 天数  | 阅读重点         | 必须搞清的问题                                                                 | 最小实验                                                  |
+| :---  | :---             | :---                                                                           | :---                                                      |
+| Day 1 | `core` 全局边界  | `core` / `alloc` / `std` 分别负责什么                                          | 列出常用 API 属于哪个 crate                               |
+| Day 2 | `src/marker.rs`  | `Send` / `Sync` / `Unpin`、`Sized`、`PhantomData` 的区别                       | 写 3 个带 `PhantomData` / 裸指针的小类型，观察 trait 推导 |
+| Day 3 | `src/mem/mod.rs` | `size_of`、`align_of`、`MaybeUninit`、`transmute` 的边界                       | 写一个数组分步初始化例子                                  |
+| Day 4 | `src/ptr/mod.rs` | `read_volatile`、`write_volatile`、`addr_of!`、`read_unaligned` 各解决什么问题 | 手写最小 `VolatileCell<T>`                                |
+| Day 5 | 周总结           | 能否解释未初始化、未对齐、volatile、别名规则的区别                             | 写一页“内存模型小抄”                                      |
 
 ### 第 1 周细化要求
 

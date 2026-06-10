@@ -168,7 +168,7 @@ Rust 语言能力
 
 原因很简单：这些能力属于 `core`，不依赖 OS。
 
-所以真正的边界不是：
+所以真正的边界**不是**：
 
 - “高级 Rust” vs “低级 Rust”
 
@@ -185,9 +185,32 @@ Rust 语言能力
 
 今天先建立总印象，不深挖 lowering 细节。
 
-### 例子 1：`for`
+### 例子 1：`for`语法糖
 
 `for` 循环背后依赖的是迭代器协议，也就是 `IntoIterator` / `Iterator`。
+```rs
+pub fn for_impl() {
+    let arr: Vec<u8> = vec![3, 1, 8];
+
+    for item in arr {
+        print!("{}", item);
+    }
+}
+
+pub fn for_impl() {
+    let arr: Vec<u8> = vec![3, 1, 8];
+    let mut iter = <Vec<u8> as IntoIterator>::into_iter(arr);
+    loop {
+        match <std::vec::IntoIter<u8> as Iterator>::next(&mut iter) {
+            Some(item) => {
+                print!("{}", item);
+            }
+            None => break,
+        }
+    }
+}
+```
+
 
 ### 例子 2：运算符
 
@@ -340,11 +363,11 @@ Rust 语言能力
 建议直接写成三列表：
 
 ```md
-| 主线 | 负责什么 | 不负责什么 |
-| :--- | :--- | :--- |
-| `src/` HAL | 寄存器封装、GPIO、RCC、时间抽象 | 具体业务流程展示 |
-| `examples/` | 业务路径、初始化流程、状态切换 | 重复实现底层寄存器访问 |
-| Renode | 仿真验证、观察外设行为 | 替代 HAL 设计本身 |
+| 主线        | 负责什么                        | 不负责什么             |
+| :---        | :---                            | :---                   |
+| `src/` HAL  | 寄存器封装、GPIO、RCC、时间抽象 | 具体业务流程展示       |
+| `examples/` | 业务路径、初始化流程、状态切换  | 重复实现底层寄存器访问 |
+| Renode      | 仿真验证、观察外设行为          | 替代 HAL 设计本身      |
 ```
 
 ---
@@ -356,12 +379,21 @@ Rust 语言能力
 写一张表：
 
 ```md
-| API | 所属层 | 为什么 |
-| :--- | :--- | :--- |
-| `Option<T>` | `core` | 不依赖堆和 OS |
-| `Vec<T>` | `alloc` | 依赖堆分配 |
-| `std::thread::spawn` | `std` | 依赖线程和 OS 运行时 |
+| API                  | 所属层  | 为什么               |
+| :---                 | :---    | :---                 |
+| `Option<T>`          | `core`  | 不依赖堆和 OS        |
+| `Result<T>`          | `core`  | 不依赖堆和 OS        |
+| `Iterator<T>`        | `core`  | 不依赖堆和 OS        |
+| `Copy<T>`            | `core`  | 不依赖堆和 OS        |
+| `Clone<T>`           | `core`  | 不依赖堆和 OS        |
+| `Deref<T>`           | `core`  | 不依赖堆和 OS        |
+| `size_of<T>`         | `core`  | 不依赖堆和 OS        |
+| `read_volatile<T>`   | `core`  | 不依赖堆和 OS        |
+| `UnsafeCell<T>`      | `core`  | 不依赖堆和 OS        |
+| `Vec<T>`             | `alloc` | 依赖堆分配           |
+| `std::thread::spawn` | `std`   | 依赖线程和 OS 运行时 |
 ```
+
 
 要求至少写 15 行。
 

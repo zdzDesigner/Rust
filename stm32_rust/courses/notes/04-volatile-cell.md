@@ -39,7 +39,7 @@ unsafe { core::ptr::write_volatile(addr, val | 0x01) };
 ### 核心原理
 1.  **`UnsafeCell<T>`**：告诉编译器“这块内存可以通过共享引用被修改（例如被中断修改）”。
 2.  **`#[repr(transparent)]`**：保证 `VolatileCell<u32>` 在内存中与 `u32` 完全等价。
-3.  **Safe API**：对外暴露 `get()` 和 `set()` 方法，内部处理 unsafe 操作。
+3.  **Safe API**：对外暴露 `read()`、`write()` 和 `update()` 方法，内部处理 unsafe 操作。
 
 ### 代码示例
 ```rust
@@ -53,23 +53,30 @@ pub struct VolatileCell<T> {
 impl<T: Copy> VolatileCell<T> {
     // 读取
     #[inline(always)]
-    pub fn get(&self) -> T {
+    pub fn read(&self) -> T {
         // self.value.get() 返回 *mut T，我们转为 *const T 读取
         unsafe { core::ptr::read_volatile(self.value.get() as *const T) }
     }
 
     // 写入
     #[inline(always)]
-    pub fn set(&self, value: T) {
+    pub fn write(&self, value: T) {
         // self.value.get() 返回 *mut T，直接写入
         unsafe { core::ptr::write_volatile(self.value.get(), value) }
+    }
+
+    // 读改写：不是原子操作，只是 read -> f -> write 的简写
+    #[inline(always)]
+    pub fn update(&self, f: impl FnOnce(T) -> T) {
+        let value = self.read();
+        self.write(f(value));
     }
 }
 ```
 
 ### 优势
 *   **安全性**：既防止了编译器优化（Volatile），又符合 Rust 的别名规则（UnsafeCell）。
-*   **可读性**：`rcc.apb2enr.set(...)` 非常直观。
+*   **可读性**：`rcc.apb2enr.write(...)` 和 `rcc.apb2enr.update(...)` 非常直观。
 *   **低开销**：`inline(always)` 让编译器倾向于内联，通常可生成与手写 volatile 访问等价的机器码。
 
 ---
@@ -82,8 +89,11 @@ impl<T: Copy> VolatileCell<T> {
 // src/main.rs
 let rcc = &*RCC_BASE; // 注意：这里我们获取的是共享引用 &RCC_Regs
 // 但依然可以安全地写入，因为 VolatileCell 处理了内部可变性
-rcc.apb2enr.set(0x01); 
+rcc.apb2enr.write(0x01);
+rcc.apb2enr.update(|value| value | 0x01);
 ```
 这种设计是 Rust 嵌入式底层寄存器封装中的常见模式；实际 HAL 往往通过 PAC/svd2rust 生成的寄存器 API 间接使用类似思想。
+
+`update()` 不是原子操作。如果中断和主循环可能同时改同一个寄存器，需要额外使用临界区或其它同步方式。
 
 *注：本笔记记录了 0 依赖项目中硬件访问的高级封装方法，特别是解决了中断环境下的别名问题。*

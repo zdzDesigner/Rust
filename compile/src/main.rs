@@ -13,6 +13,7 @@
 // }
 
 mod closure;
+mod for_impl;
 mod generics;
 mod lifetime;
 mod macro_demo;
@@ -32,5 +33,7 @@ fn main() {
     // lifetime::longest("aaa", "bbb");
     // closure::test_closure_scope();
 
-    macro_demo::test_vvv();
+    // macro_demo::test_vvv();
+    for_impl::for_impl();
 }
+

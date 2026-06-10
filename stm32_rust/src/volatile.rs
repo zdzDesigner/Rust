@@ -2,7 +2,7 @@ use core::cell::UnsafeCell;
 use core::ptr::{read_volatile, write_volatile};
 
 /// [输入]：寄存器块结构体中的单个字段类型，例如 `VolatileCell<u32>`。
-/// [输出]：提供带 volatile 语义的 `get` / `set` 访问接口。
+/// [输出]：提供带 volatile 语义的 `read` / `write` / `update` 访问接口。
 /// [定位]：最小 MMIO 访问封装，给 `rcc.rs`、`gpio.rs` 等 HAL 模块使用。
 /// [同步]：更新这里时，要同步检查 `src/rcc.rs`、`src/gpio.rs`、`courses/core/pointers-and-mmio.md`。
 ///
@@ -41,7 +41,7 @@ impl<T: Copy> VolatileCell<T> {
     ///
     /// `self.value.get()` 返回的是 `*mut T`，这里再转成 `*const T`，因为当前只是读。
     #[inline(always)]
-    pub fn get(&self) -> T {
+    pub fn read(&self) -> T {
         unsafe { read_volatile(self.value.get() as *const T) }
     }
 
@@ -62,9 +62,19 @@ impl<T: Copy> VolatileCell<T> {
     /// 所以如果后面出现“主循环 + 中断”共享访问，仍需要结合临界区、原子类型
     /// 或更高层同步手段，而不能把 `VolatileCell<T>` 当成同步原语。
     #[inline(always)]
-    pub fn set(&self, value: T) {
+    pub fn write(&self, value: T) {
         // `UnsafeCell::get()` 返回底层存储的可变裸指针。
         // 这里不是在修改普通 Rust 变量，而是在对某个寄存器地址执行 MMIO 写入。
         unsafe { write_volatile(self.value.get(), value) }
+    }
+
+    /// 读取、计算并写回寄存器值。
+    ///
+    /// 这只是 `read -> f -> write` 的简写，不是原子操作。
+    /// 如果主循环和中断会同时访问同一个寄存器，仍需要临界区或其它同步手段。
+    #[inline(always)]
+    pub fn update(&self, f: impl FnOnce(T) -> T) {
+        let value = self.read();
+        self.write(f(value));
     }
 }

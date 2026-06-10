@@ -58,8 +58,7 @@ impl Rcc {
 
     pub fn enable_gpiob(&self) {
         let regs = unsafe { &*self.regs };
-        let current = regs.apb2enr.get();
-        regs.apb2enr.set(current | IOPBEN);
+        regs.apb2enr.update(|value| value | IOPBEN);
 
         // 使能时钟后插入屏障，避免后续 GPIO 访问过早执行。
         unsafe { asm!("dsb", "isb") };
@@ -67,8 +66,7 @@ impl Rcc {
 
     pub fn enable_gpioc(&self) {
         let regs = unsafe { &*self.regs };
-        let current = regs.apb2enr.get();
-        regs.apb2enr.set(current | IOPCEN);
+        regs.apb2enr.update(|value| value | IOPCEN);
 
         // 使能时钟后插入屏障，避免后续 GPIO 访问过早执行。
         unsafe { asm!("dsb", "isb") };
