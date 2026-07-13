@@ -1,5 +1,9 @@
 use std::any::type_name;
+use std::fmt::Debug;
 
+pub fn print_type_of<T: Debug>(t: T) {
+    println!("[typeof] {:?}:{}", t, type_name::<T>());
+}
 pub fn type_of<T>(t: T) {
     println!("type_name:{}", type_name::<T>());
 }
@@ -18,6 +22,7 @@ mod test_type_base {
 
         let (red, green, blue, alpha) = color;
         println!("{}", alpha);
+
 
         type_of(red); // u8
         // for v in color { // not an iterator
@@ -56,5 +61,16 @@ mod test_type_base {
         let names = ["zdz", "zym"];
         println!("names len:{}", names.len());
         type_of(names); // [&str; 2]
+    }
+
+    #[test]
+    fn test_unit_type() {
+        let v = if true {};
+        type_of(v); // ()
+    }
+    #[test]
+    fn test_string_type() {
+        let string = String::from("name");
+        type_of(string); // alloc::string::String
     }
 }

@@ -1,4 +1,5 @@
 use crate::type_base::type_of;
+
 pub fn str_method() {
     let mut s = String::from("x");
 
@@ -85,6 +86,9 @@ mod test_string {
 
     #[test]
     fn base() {
+        let number = 6;
+        let result = if number % 2 == 0 { "偶数" } else { "奇数" };
+
         str_method();
     }
 
@@ -171,10 +175,13 @@ mod test_string {
 
 #[cfg(test)]
 mod test_string_base {
+    use crate::type_base::{print_type_of};
+
 
     #[test]
-    fn test_base() {
+    fn test_string_base() {
         let name = "zdz";
+        print_type_of(name);
         let name_obj = name.to_string();
         println!("name: {:?}", name);
         println!("name_obj: {:?}", name_obj);
@@ -191,6 +198,13 @@ mod test_string_base {
         let name_obj = String::from("zdz");
         let name_vec = name_obj.into_bytes();
         // println!("moved: {:?}", name_obj); // =========== 转移了
+    }
+
+    #[test]
+    fn string_unicode() {
+        let zh = '中';
+        println!("{zh} as u32:{}", zh as u32); // 20013
+        println!("{zh} as u64:{}", zh as u64); // 20013
     }
 }
 

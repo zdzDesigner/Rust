@@ -28,3 +28,20 @@ dist-ssr
 *.sln
 *.sw?
 
+.gradle
+
+# Android/Rust mobile demo build outputs
+mobile/target/
+mobile/android/.gradle/
+mobile/android/app/build/
+mobile/android/app/src/main/jniLibs/
+mobile/android/.gradle/gradle-*-bin.zip
+mobile/android/.gradle/gradle-*/
+
+# GPUI Mobile build outputs
+gpui_mobile/target/
+gpui_mobile/android/.gradle/
+gpui_mobile/android/app/build/
+gpui_mobile/android/app/src/main/jniLibs/
+gpui_mobile/android/.gradle/gradle-*-bin.zip
+gpui_mobile/android/.gradle/gradle-*/
