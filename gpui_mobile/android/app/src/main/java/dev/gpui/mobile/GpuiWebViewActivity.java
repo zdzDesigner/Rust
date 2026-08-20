@@ -10,6 +10,7 @@ import android.webkit.WebViewClient;
 
 public final class GpuiWebViewActivity extends Activity {
     static final String EXTRA_URL = "dev.gpui.mobile.EXTRA_URL";
+    static final String EXTRA_HTML = "dev.gpui.mobile.EXTRA_HTML";
 
     private WebView webView;
 
@@ -18,14 +19,15 @@ public final class GpuiWebViewActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         String url = getIntent().getStringExtra(EXTRA_URL);
-        if (url == null || url.isEmpty()) {
+        String html = getIntent().getStringExtra(EXTRA_HTML);
+        if ((url == null || url.isEmpty()) && (html == null || html.isEmpty())) {
             finish();
             return;
         }
 
         webView = new WebView(this);
         WebSettings settings = webView.getSettings();
-        settings.setJavaScriptEnabled(true);
+        settings.setJavaScriptEnabled(url != null && !url.isEmpty());
         settings.setDomStorageEnabled(true);
         settings.setAllowFileAccess(false);
         settings.setAllowContentAccess(false);
@@ -41,7 +43,11 @@ public final class GpuiWebViewActivity extends Activity {
         setContentView(webView, new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
-        webView.loadUrl(url);
+        if (html != null && !html.isEmpty()) {
+            webView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null);
+        } else {
+            webView.loadUrl(url);
+        }
     }
 
     @Override

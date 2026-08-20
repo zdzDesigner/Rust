@@ -11,5 +11,12 @@ public final class GpuiWebView {
         activity.startActivity(intent);
     }
 
+    public static void openHtml(Activity activity, String html) {
+        Intent intent = new Intent(activity, GpuiWebViewActivity.class);
+        intent.putExtra(GpuiWebViewActivity.EXTRA_HTML, html);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        activity.startActivity(intent);
+    }
+
     private GpuiWebView() {}
 }

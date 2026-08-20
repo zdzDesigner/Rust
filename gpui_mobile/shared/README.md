@@ -231,10 +231,8 @@ PC 端是独立的轻量 HTTP 服务（`crates/file-server/`），Android 端通
 
 - 手机 → PC：点「上传文件」，经 SAF 选文件后上传到 PC 共享目录
   （`GpuiFilePicker.copyToCache` 先把 content:// URI 拷入 cache 再流式发送）。
-- PC → 手机：文件列表逐项「下载」，流式下载到缓存后经
-  `GpuiDownloads.saveToDownloads` 存入公共**下载（Downloads）目录**：
-  API 29+ 走 `MediaStore.Downloads`（免权限），API 26-28 走公共目录
-  （需 `WRITE_EXTERNAL_STORAGE`，已声明 `maxSdkVersion=28`）。
+- PC → 手机：文件列表逐项「下载」，流式写入 app 内部存储目录
+  （`path_provider::documents_directory()`），文件名冲突自动加序号。
 - 两端均显示实时进度（每 200ms 刷新一次）。
 
 ### 协议（极简 HTTP，免配对，同局域网）
