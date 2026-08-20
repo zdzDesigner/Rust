@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>文件互传</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background: #f3f4f6; color: #111827; line-height: 1.6;
+  max-width: 720px; margin: 0 auto; padding: 24px 16px 48px;
+}
+header { text-align: center; margin-bottom: 20px; }
+header h1 { font-size: 24px; }
+header .hint { color: #6b7280; font-size: 14px; margin-top: 4px; }
+.qr { text-align: center; margin-bottom: 24px; }
+.qr img { background: #fff; border-radius: 12px; padding: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+.panel {
+  background: #fff; border-radius: 12px; padding: 16px 20px;
+  margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.08);
+}
+.panel h2 { font-size: 16px; margin-bottom: 12px; }
+#files { list-style: none; }
+#files li {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 0; border-bottom: 1px solid #f3f4f6; gap: 12px;
+}
+#files li:last-child { border-bottom: none; }
+#files .name { color: #2563eb; text-decoration: none; word-break: break-all; flex: 1; }
+#files .meta { color: #9ca3af; font-size: 12px; white-space: nowrap; }
+#files .empty { color: #9ca3af; font-size: 14px; }
+#drop {
+  border: 2px dashed #d1d5db; border-radius: 10px; padding: 32px 16px;
+  text-align: center; color: #6b7280; cursor: pointer; transition: all .15s;
+}
+#drop.over { border-color: #2563eb; background: #eff6ff; color: #2563eb; }
+#bar { width: 100%; height: 8px; margin-top: 12px; display: none; }
+#upstatus { color: #374151; font-size: 14px; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>文件互传</h1>
+  <p class="hint">手机扫描二维码连接此 PC</p>
+</header>
+<div class="qr">__QR_IMG__</div>
+<section class="panel">
+  <h2>共享目录文件</h2>
+  <ul id="files"><li class="empty">加载中...</li></ul>
+</section>
+<section class="panel">
+  <h2>上传文件到共享目录</h2>
+  <div id="drop">点击或拖拽文件到此处上传</div>
+  <progress id="bar" value="0" max="100"></progress>
+  <p id="upstatus"></p>
+</section>
+<input type="file" id="input" multiple hidden>
+<script>
+function fmtSize(n) {
+  if (n >= 1073741824) return (n / 1073741824).toFixed(2) + ' GB';
+  if (n >= 1048576) return (n / 1048576).toFixed(2) + ' MB';
+  if (n >= 1024) return (n / 1024).toFixed(1) + ' KB';
+  return n + ' B';
+}
+async function refresh() {
+  try {
+    const res = await fetch('/api/list');
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const files = await res.json();
+    const ul = document.getElementById('files');
+    ul.innerHTML = '';
+    if (files.length === 0) {
+      ul.innerHTML = '<li class="empty">（空目录）</li>';
+      return;
+    }
+    for (const f of files) {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = '/api/file/' + encodeURIComponent(f.name);
+      a.textContent = f.name;
+      a.className = 'name';
+      const meta = document.createElement('span');
+      meta.className = 'meta';
+      meta.textContent = fmtSize(f.size) + ' · ' + new Date(f.mtime * 1000).toLocaleString();
+      li.append(a, meta);
+      ul.appendChild(li);
+    }
+  } catch (err) {
+    document.getElementById('files').innerHTML =
+      '<li class="empty">加载失败：' + err + '</li>';
+  }
+}
+function uploadFile(file) {
+  const url = '/api/upload?name=' + encodeURIComponent(file.name) + '&size=' + file.size;
+  const xhr = new XMLHttpRequest();
+  xhr.open('POST', url);
+  document.getElementById('bar').style.display = 'block';
+  xhr.upload.onprogress = (e) => {
+    if (e.lengthComputable) document.getElementById('bar').value = e.loaded / e.total * 100;
+  };
+  xhr.onload = () => {
+    document.getElementById('bar').style.display = 'none';
+    document.getElementById('upstatus').textContent =
+      xhr.status === 200 ? '上传完成：' + file.name : '上传失败：HTTP ' + xhr.status;
+    refresh();
+  };
+  xhr.onerror = () => {
+    document.getElementById('bar').style.display = 'none';
+    document.getElementById('upstatus').textContent = '上传失败：网络错误';
+  };
+  xhr.send(file);
+}
+const drop = document.getElementById('drop');
+drop.addEventListener('click', () => document.getElementById('input').click());
+drop.addEventListener('dragover', (e) => { e.preventDefault(); drop.classList.add('over'); });
+drop.addEventListener('dragleave', () => drop.classList.remove('over'));
+drop.addEventListener('drop', (e) => {
+  e.preventDefault();
+  drop.classList.remove('over');
+  for (const f of e.dataTransfer.files) uploadFile(f);
+});
+document.getElementById('input').addEventListener('change', (e) => {
+  for (const f of e.target.files) uploadFile(f);
+  e.target.value = '';
+});
+refresh();
+setInterval(refresh, 5000);
+</script>
+</body>
+</html>
