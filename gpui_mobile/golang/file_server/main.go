@@ -9,6 +9,7 @@
 package main
 
 import (
+	_ "embed"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
@@ -132,7 +133,8 @@ func writeJSON(w http.ResponseWriter, status int, body any) {
 }
 
 func (s *server) serveIndex(w http.ResponseWriter, r *http.Request) {
-	body := strings.Replace(indexHTML, "__QR_IMG__", s.qrPNG, 1)
+	img := fmt.Sprintf(`<img src="%s" alt="二维码">`, s.qrPNG)
+	body := strings.Replace(indexHTML, "__QR_IMG__", img, 1)
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.Write([]byte(body))
 }

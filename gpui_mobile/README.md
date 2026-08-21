@@ -205,7 +205,12 @@ HTML escape 后放入 `<pre>`。HTML 内容路径会关闭 JavaScript。
 
 ## PC ↔ Android 文件互传
 
-PC 端是独立的轻量 HTTP 服务（`crates/file-server/`），Android 端通过扫码直连。
+PC 端提供两个等价实现（协议一致，任选其一）：
+
+- `crates/file-server/`：Rust 版（tiny_http + qrcode，二进制约 2MB）
+- `golang/file_server/`：Go 版（标准库 + skip2/go-qrcode，二进制约 9MB）
+
+Android 端通过扫码直连。
 
 ### 使用流程
 
@@ -221,6 +226,14 @@ PC 端是独立的轻量 HTTP 服务（`crates/file-server/`），Android 端通
    cd crates/file-server
    cargo build --release
    ./target/release/file-server [共享目录]   # 默认 ./shared
+   ```
+
+   Go 版：
+
+   ```bash
+   cd golang/file_server
+   go build -o file-server .
+   ./file-server [共享目录]   # 默认 ./shared
    ```
 
 2. 手机与 PC 连接**同一 WiFi**，打开 App 点击「扫描二维码」扫 PC 网页上的码。

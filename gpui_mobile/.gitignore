@@ -4,3 +4,4 @@
 /android/app/src/main/jniLibs/
 /android/.gradle/gradle-*-bin.zip
 /shared/
+/golang/file_server/file-server
