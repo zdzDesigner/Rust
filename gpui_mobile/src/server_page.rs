@@ -133,6 +133,7 @@ pub fn render_server_page(home: &mut Home, cx: &mut Context<Home>) -> Div {
         .text_color(rgb(0x111827))
         .px_4()
         .py_6()
+        .pt(px(48.0))
         .child(
             div()
                 .flex()

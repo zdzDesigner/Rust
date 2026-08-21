@@ -23,11 +23,18 @@ echo "✅ Device(s) connected:"
 adb devices
 echo ""
 
+# 解析参数：--release 安装 release 版本，否则安装 debug 版本
+BUILD_TYPE=debug
+if [ "$1" = "--release" ]; then
+    BUILD_TYPE=release
+fi
+
 # 安装 APK
-APK_PATH="android/app/build/outputs/apk/debug/app-debug.apk"
+APK_PATH="android/app/build/outputs/apk/$BUILD_TYPE/app-$BUILD_TYPE.apk"
 
 if [ ! -f "$APK_PATH" ]; then
-    echo "❌ APK not found. Run ./build.sh first."
+    echo "❌ APK not found: $APK_PATH"
+    echo "Run ./build.sh${1:+ $1} first."
     exit 1
 fi
 

@@ -4,6 +4,12 @@ set -e
 echo "🦀 Building GPUI Mobile Demo"
 echo "=============================="
 
+# 解析参数：--release 构建 release 版本，否则构建 debug 版本
+BUILD_TYPE=debug
+if [ "$1" = "--release" ]; then
+    BUILD_TYPE=release
+fi
+
 # 检查必要的工具
 command -v cargo >/dev/null 2>&1 || { echo "❌ cargo not found. Install Rust first."; exit 1; }
 command -v adb >/dev/null 2>&1 || { echo "❌ adb not found. Install Android SDK first."; exit 1; }
@@ -31,8 +37,12 @@ if ! command -v cargo-ndk >/dev/null 2>&1; then
 fi
 
 # 编译 Rust 库
-echo "🔨 Building GPUI Mobile library for Android (aarch64)..."
-cargo ndk -t arm64-v8a -P 31 -o android/app/src/main/jniLibs build --release
+echo "🔨 Building GPUI Mobile library for Android (aarch64, $BUILD_TYPE)..."
+if [ "$BUILD_TYPE" = "release" ]; then
+    cargo ndk -t arm64-v8a -P 31 -o android/app/src/main/jniLibs build --release
+else
+    cargo ndk -t arm64-v8a -P 31 -o android/app/src/main/jniLibs build
+fi
 
 echo "✅ Rust library built successfully"
 
@@ -64,16 +74,16 @@ if [ ! -f "./gradlew" ]; then
         unzip -q "$GRADLE_ZIP" -d .gradle
     fi
 
-    JAVA_HOME="$JAVA17_HOME" PATH="$JAVA17_HOME/bin:$PATH" "$GRADLE_DIR/bin/gradle" assembleDebug
+    JAVA_HOME="$JAVA17_HOME" PATH="$JAVA17_HOME/bin:$PATH" "$GRADLE_DIR/bin/gradle" "assemble${BUILD_TYPE^}"
 else
-    JAVA_HOME="$JAVA17_HOME" PATH="$JAVA17_HOME/bin:$PATH" ./gradlew assembleDebug
+    JAVA_HOME="$JAVA17_HOME" PATH="$JAVA17_HOME/bin:$PATH" ./gradlew "assemble${BUILD_TYPE^}"
 fi
 
 cd ..
 
 echo "✅ APK built successfully"
 echo ""
-echo "📱 APK location: android/app/build/outputs/apk/debug/app-debug.apk"
+echo "📱 APK location: android/app/build/outputs/apk/$BUILD_TYPE/app-$BUILD_TYPE.apk"
 echo ""
 echo "🚀 To install on device:"
 echo "   ./install.sh"
