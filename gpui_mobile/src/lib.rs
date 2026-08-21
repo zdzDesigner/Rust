@@ -8,9 +8,12 @@ use std::{cell::RefCell, sync::atomic::Ordering};
 
 extern crate gpui_mobile;
 
+mod server;
+mod server_page;
 mod transfer;
 mod transfer_page;
 
+use server_page::ServerState;
 use transfer_page::TransferState;
 
 thread_local! {
@@ -25,6 +28,7 @@ struct Home {
     password: TextField,
     focused_login_field: Option<LoginField>,
     transfer: TransferState,
+    server: ServerState,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -32,6 +36,7 @@ enum Page {
     Home,
     Login,
     Transfer,
+    Server,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -50,6 +55,7 @@ impl Home {
             password: TextField::new(""),
             focused_login_field: None,
             transfer: TransferState::new(String::new()),
+            server: ServerState::new(),
         }
     }
 }
@@ -193,6 +199,7 @@ impl Render for Home {
             Page::Home => self.render_home(cx),
             Page::Login => self.render_login(cx),
             Page::Transfer => transfer_page::render_transfer_page(self, cx),
+            Page::Server => server_page::render_server_page(self, cx),
         }
     }
 }
@@ -331,6 +338,24 @@ impl Home {
                                 });
                             })
                             .detach();
+                        }),
+                    ),
+            )
+            .child(
+                div()
+                    .px_8()
+                    .py_4()
+                    .rounded_lg()
+                    .bg(rgb(0x059669))
+                    .text_color(rgb(0xffffff))
+                    .text_lg()
+                    .child("作为服务器")
+                    .on_mouse_down(
+                        gpui::MouseButton::Left,
+                        cx.listener(|this, _event, _window, cx| {
+                            this.page = Page::Server;
+                            this.start_server(cx);
+                            cx.notify();
                         }),
                     ),
             )

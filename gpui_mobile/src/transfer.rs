@@ -18,7 +18,7 @@ const MAX_HEADER_BYTES: usize = 64 * 1024;
 const MAX_LIST_BYTES: usize = 4 * 1024 * 1024;
 const CHUNK_SIZE: usize = 64 * 1024;
 
-#[derive(Debug, Clone, serde::Deserialize)]
+#[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
 pub struct FileEntry {
     pub name: String,
     pub size: u64,
